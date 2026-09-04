@@ -15,15 +15,28 @@ Every command in this kit is run exactly this way, from any folder:
 PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <command>
 ```
 
-No install step, no virtualenv, no dependencies. If `python3` is missing, that is the only
-thing they need.
+No install step, no virtualenv, no dependencies.
+
+**Check Python before anything else.** It needs 3.10 or newer. On a Mac that has never had
+developer tools installed, `python3` is a stub that opens an Apple installer dialog, so without
+this the first thing a new user meets is that dialog rather than a sentence from us:
+
+```bash
+python3 --version
+```
+
+Older than 3.10, or no output: tell them to run `xcode-select --install`, or to get a current
+Python from <https://www.python.org/downloads/>. `/ads-cooking:connect` checks this too and stops
+with the same advice.
 
 ## Work out where they are
 
 Check in this order and stop at the first thing that is not true:
 
 1. **Is there a config folder?** Look for `ads-cooking/` in the current project, then `~/.ads-cooking/`.
-   Nothing there means they have never set this up. Run **`/ads-cooking:connect`**.
+   Nothing there means they have never set this up. Run **`/ads-cooking:connect`**. Do not create
+   the folder by hand: `connect` is the only path that sets the file permissions and proves git
+   cannot commit the token.
 2. **Does the token work?** Run **`/ads-cooking:check`**. If it fails, fix that before anything else.
    Everything downstream fails in more confusing ways.
 3. **Is anything published?** Read `campaign.json`. An empty `live.ad_id` means nothing exists

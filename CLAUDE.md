@@ -12,6 +12,15 @@ front of you even if you read nothing else.
 3. **Never ask for the token in chat**, and never print or echo `.env`.
 4. **Never make `pulse` write.** It reads only.
 
+## Before you run anything on a new machine
+
+`python3 --version` must say 3.10 or newer. On a Mac without developer tools, `python3` is a stub
+that opens an Apple installer dialog, and that dialog is otherwise the first thing a new user
+meets. Older than 3.10: `xcode-select --install`.
+
+Then `connect`, which is offline and is the only path that locks the secrets file down and proves
+git cannot commit it. Never build the config folder by hand.
+
 ## Running the commands
 
 Installed as a plugin, from any folder:
@@ -37,7 +46,7 @@ prefix is part of the name.
 | Command | What it does | Can it spend money? |
 |---|---|---|
 | `/ads-cooking:start` | Works out where the user is and routes to the right one | No |
-| `/ads-cooking:connect` | Connect an ad account, ending with a working token | No |
+| `/ads-cooking:connect` | Set up the config folder, then the Meta steps as prefilled links | No |
 | `/ads-cooking:check` | Prove the token reaches the account, page and forms | No |
 | `/ads-cooking:publish` | Create the campaign | Only with `--go`, and it lands paused |
 | `/ads-cooking:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
@@ -47,7 +56,7 @@ prefix is part of the name.
 Each maps to a subcommand of the same name, minus `start`, which only routes:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <check|publish|copy|form|pulse>
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <connect|check|publish|copy|form|pulse>
 ```
 
 ## The skills
@@ -61,7 +70,7 @@ Reference docs from a skill with `${CLAUDE_PLUGIN_ROOT}/context/<file>.md`, neve
 ## Reviewing changes here
 
 The safety properties in AGENTS.md are asserted by tests, not just documented. If you change
-`publish.py`, `pulse.py` or `config.py`, run the suite before you say anything works:
+`publish.py`, `pulse.py`, `config.py` or `setup.py`, run the suite before you say anything works:
 
 ```bash
 python3 -m unittest discover -s tests -t .

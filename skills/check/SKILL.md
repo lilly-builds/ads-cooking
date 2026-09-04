@@ -13,7 +13,9 @@ Four reads, in the order things actually break. Run this first whenever anything
 PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking check
 ```
 
-Exit code `0` means everything works and they can publish.
+Exit code `0` means everything works and they can publish. `1` means the account, page or forms
+need attention. `3` means the setup itself is broken, which now includes a dead token: a key that
+needs regenerating must never be reported as the ads being in trouble.
 
 ## Reading the result
 
@@ -30,6 +32,13 @@ not rebuild anything: see `${CLAUDE_PLUGIN_ROOT}/context/api-notes.md`.
 
 **A token error** means it expired or was revoked. Generate a new one in Business Settings under
 Users, System users, and update the `.env` file. Never paste the token into chat.
+
+## The expiry line
+
+A clean run ends with the token's expiry date. **Say it out loud and tell them to write it down.**
+`/ads-cooking:pulse` warns 14 days out, but only on a token that still works: once it has expired,
+the warning that would have prevented it is the thing that stops running. This line at setup time
+is the only chance to diary it.
 
 ## What to tell the user
 

@@ -107,13 +107,23 @@ document, or a commit. If you lose it, generate another.
 
 ## 10. Set up the config folder
 
+Do not build it by hand. This command is the only path that locks the file down and actually
+proves git cannot commit it:
+
 ```bash
-mkdir -p ads-cooking
-cp "${CLAUDE_PLUGIN_ROOT}/.env.example" ads-cooking/.env
-cp "${CLAUDE_PLUGIN_ROOT}/campaign.example.json" ads-cooking/campaign.json
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking connect
 ```
 
-Fill in the three values in `ads-cooking/.env`. Make sure `ads-cooking/` is gitignored.
+To keep the settings inside a project rather than your home folder, name the folder. The flag
+goes before the subcommand:
+
+```bash
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking --config-dir ads-cooking connect
+```
+
+It prints the path it used. Fill the three values into the `.env` file **at that path**. If it
+says STOP, the file is somewhere git would commit it: fix the `.gitignore` it names and run it
+again before the token goes anywhere near it.
 
 ## 11. Prove it works
 

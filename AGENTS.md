@@ -19,7 +19,7 @@ prefix is part of the name.
 | Command | What it does | Can it spend money? |
 |---|---|---|
 | `/ads-cooking:start` | Works out where the user is and routes to the right one | No |
-| `/ads-cooking:connect` | Connect an ad account, ending with a working token | No |
+| `/ads-cooking:connect` | Set up the config folder, then the Meta steps as prefilled links | No |
 | `/ads-cooking:check` | Prove the token reaches the account, page and forms | No |
 | `/ads-cooking:publish` | Create the campaign | Only with `--go`, and it lands paused |
 | `/ads-cooking:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
@@ -29,7 +29,7 @@ prefix is part of the name.
 Each maps to a subcommand of the same name, minus `start`, which only routes:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <check|publish|copy|form|pulse>
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <connect|check|publish|copy|form|pulse>
 ```
 
 ## Rules you must not break
@@ -40,7 +40,9 @@ PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <check|publish|copy|for
 2. **Never set a campaign, ad set or ad to ACTIVE.** No code path here does it and none should be
    added. A person makes that decision in Ads Manager, looking at the preview.
 3. **Never ask the user to paste their token into the chat**, and never read `.env` back to them,
-   print it, or write it into a file they will share. The token is a key to their ad spend.
+   print it, or write it into a file they will share. The token is a key to their ad spend. This
+   covers the browser too: never point a browser tool at the token screen, and never automate a
+   consent click or a password field. Reading id numbers is fine; those four are the user's.
 4. **Never add a fallback ad account id**, not even in an example or a test helper that could be
    copied. A missing value must stop the command before it reaches Meta. `test_config.py` greps
    the package for this and will fail you.
@@ -52,33 +54,62 @@ PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <check|publish|copy|for
 
 All of this is safe, offline, and touches nothing on Meta.
 
+**Check Python first, before anything else.** It needs 3.10 or newer. On a Mac that has never had
+developer tools installed, `python3` is a stub that opens an Apple installer dialog, so skipping
+this means the first thing a new user meets is that dialog instead of a sentence from us.
+
 ```bash
-git clone https://github.com/lilly-builds/ads-cooking
-cd ads-cooking
-
-# 1. Tests. No dependencies, no network, no ad account.
-python3 -m unittest discover -s tests -t .        # expect: 101 tests, OK
-
-# 2. The full gate.
-./scripts/check.sh                                 # expect: ALL CHECKS PASSED
-
-# 3. A config folder for the user to fill in. Put it in THEIR project, not in a
-#    clone of this repo: the repo is also called ads-cooking, and nesting
-#    ads-cooking/ads-cooking/ confuses everyone including you.
-mkdir -p ads-cooking
-cp "${CLAUDE_PLUGIN_ROOT}/.env.example" ads-cooking/.env
-cp "${CLAUDE_PLUGIN_ROOT}/campaign.example.json" ads-cooking/campaign.json
-
-# 4. Confirm it is ignored by git before anything else happens.
-git check-ignore ads-cooking/.env                     # expect: ads-cooking/.env
+python3 --version        # 3.10 or newer. Older: xcode-select --install
 ```
 
-If their project has no .gitignore, or does not cover it, add `ads-cooking/` before you go any
-further. A token in someone's git history is the one mistake here you cannot take back.
+Then let `connect` do the rest. It is offline, it never reaches Meta, and it is the only path
+that sets the file permissions and proves git cannot commit the token:
+
+```bash
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking connect   # installed as a plugin
+PYTHONPATH="$(pwd)" python3 -m adscooking connect                  # working in a clone
+```
+
+It creates the config folder, copies `.env` and `campaign.json` into it without ever overwriting
+an existing one, locks `.env` to its owner, runs `git check-ignore` on it for real, and prints
+Meta's nine setup steps in order. Exit 3 on a first run means values are still blank, which is
+the expected answer.
+
+**Do not create the config folder by hand.** The prose version of this was four steps a model
+performed from memory, and one of them, the gitignore check, is the only mistake in this repo
+that cannot be undone. It is code with tests behind it now: `adscooking/setup.py` and
+`tests/test_setup.py`.
+
+**Ask for the Business Portfolio id before anything else, and re-run with it.**
+
+```bash
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking connect --business-id <ID>
+```
+
+Almost every later URL is scoped to that id. With it, steps 4 to 7 are links that land on the
+right screen; without it, the user is told to go hunting in Business Settings, which is where the
+setup time goes. Add `--page-id` and `--app-id` as they appear and re-run. Re-running is safe.
+
+If the git check says STOP, stop. Add the config folder to that repository's `.gitignore` before
+a token goes anywhere near it.
 
 Requires Python 3.10 or newer. Nothing else: no pip install, no virtualenv, no lockfile.
 
-Then stop. Step 5 is the user's.
+Then stop. The Meta steps are the user's.
+
+### The browser can find the ids, and nothing else
+
+Reading id numbers out of Business Settings is the tedious half of setup and it is safe to help
+with. If a browser tool is available, use it for reading only:
+
+**Allowed.** Open and read `https://business.facebook.com/settings/info` for the Business
+Portfolio id, Ads Manager for the ad account id, and the Page's About tab for the Page id. Feed
+what you find into the `connect` flags.
+
+**Never.** Do not drive the token screen, click Generate token, click Accept or Save on any terms
+or consent page, touch a password field, or read a page that is displaying the token. Those are
+the user's steps by design, and a browser agent that reads the token screen puts a key to
+somebody's ad spend into a transcript.
 
 ## What only a human can do
 
@@ -102,11 +133,18 @@ The parts that are unavoidably theirs:
 
 Tell them, in these words or close to them:
 
-> Meta will show the token once. Copy it straight into `ads-cooking/.env` after
+> Meta will show the token once. Copy it straight into the `.env` file after
 > `META_SYSTEM_USER_TOKEN=`. Do not paste it into this chat, a document, or anywhere else. If it
 > ends up somewhere it should not, regenerate it and the old one dies.
 
-Then have them fill in the other two values in `ads-cooking/.env`:
+**Use the path `connect` printed, and read it back to them.** Do not say `ads-cooking/.env` from
+memory: with no flag, a first run writes `~/.ads-cooking/.env`, because `config_dir()` only
+prefers a project-local `ads-cooking/` once it already holds config. Naming the wrong file is how
+a user ends up hand-making a second one that skips every check here, and it wins, because a
+project-local folder takes precedence the moment it exists. For a project-local setup, pass the
+flag before the subcommand: `--config-dir ads-cooking connect`.
+
+Then have them fill in the other two values in that same `.env`:
 
 - `META_AD_ACCOUNT_ID` from Ads Manager, top left. **The number in the panel text, not the
   `selected_asset_id` in the URL.** The URL number is an internal wrapper and produces confusing
@@ -120,7 +158,9 @@ PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking check   # installed as 
 PYTHONPATH="$(pwd)" python3 -m adscooking check                  # working in a clone
 ```
 
-Exit 0 means done. If lead forms fail while everything else passes, the system user has the ad
+Exit 0 means done. A clean run ends with the token's expiry date: read it out and tell them to
+write it down. `pulse` warns 14 days ahead, but only on a token that still works, so once one has
+expired the warning that would have prevented it is exactly what stops running. If lead forms fail while everything else passes, the system user has the ad
 account but was never given a task on the Page. Send them back to give it MANAGE or ADVERTISE.
 
 ### Human step 2: flip the app out of Development mode
@@ -196,9 +236,10 @@ being in trouble.
 |---|---|
 | `adscooking/graph.py` | The only module that talks to Meta |
 | `adscooking/config.py` | Loading credentials and settings, and refusing to guess |
+| `adscooking/setup.py` | Python guard, config folder, git check, and Meta's setup links |
 | `adscooking/publish.py` | The seven publish steps, dry run and resume |
 | `adscooking/update.py` | Copy and lead form changes |
 | `adscooking/pulse.py` | The read-only monitor |
 | `skills/` | The Claude Code commands |
 | `context/` | Setup guide, API notes, and the research behind the thresholds |
-| `tests/` | 101 tests, including the in-memory Graph API |
+| `tests/` | 130 tests, including the in-memory Graph API |
