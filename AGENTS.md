@@ -223,6 +223,10 @@ and re-running `publish` will build a second campaign rather than resuming the f
   and hands them over. That is what makes the tests possible; do not route around it.
 - **Every Meta quirk gets a comment saying why**, because none of them are guessable from the
   code. `context/api-notes.md` is the long form.
+- **The API version is an explicit compatibility decision.** The current pin is `v21.0`, which
+  Meta lists as available through 21 January 2027. Do not change it on assumption: first test the
+  real workflow against a Meta test account, then update `DEFAULT_VERSION`, the version note, and
+  the tests together. Meta's current schedule is linked from `context/api-notes.md`.
 - **Run `./scripts/check.sh` before pushing.** Tests, JSON, manifest, skill frontmatter, command
   form, links, secrets, and the identifying-data denylist.
 

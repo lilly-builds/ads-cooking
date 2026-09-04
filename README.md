@@ -8,14 +8,21 @@ Built for people who can follow instructions but do not want to learn the Meta M
 
 ## Install
 
+You need [Claude Code](https://docs.anthropic.com/en/docs/claude-code/getting-started) installed and
+signed in. Run the following **inside Claude Code** (not in Terminal):
+
 ```
 /plugin marketplace add lilly-builds/ads-cooking
 /plugin install ads-cooking@ads-cooking
 ```
 
-That's it. No pip install. No virtualenv. No packages to download.
+The plugin is now available in every Claude Code session. No pip install, virtual environment, or
+additional package download is needed.
 
-You need Python 3.10 or newer. Most Macs have it. To check, open Terminal and type `python3 --version`. If it says something older, or pops up a box asking to install developer tools, say yes to the box, or grab a current Python from [python.org](https://www.python.org/downloads/). The setup command checks this for you and tells you the same thing.
+You also need Python 3.10 or newer. To check, open Terminal and type `python3 --version`. If it
+says something older, or opens a box asking to install developer tools, complete that installation
+or get a current Python from [python.org](https://www.python.org/downloads/). The setup command
+checks this too and explains what to do.
 
 ## Start here
 
@@ -173,7 +180,10 @@ The cost-per-lead range it ships with is a US average. Swap in numbers for your 
 
 Running several countries at once is fine, but it gives you one blended cost per lead that hides everything. A $12 lead in Poland and a $60 lead in the US average out to something that looks normal and tells you nothing. If a market matters, give it its own ad set so you can see it and set a budget for it.
 
-It's pinned to version 21 of Meta's API. Meta upgrades old versions on its own, which can change behavior without telling you. Bump it on purpose and run the tests first.
+It is intentionally pinned to Meta Graph API `v21.0`, the version this project was tested against.
+Meta lists that version as available through **21 January 2027**; its current version is newer.
+Do not wait for Meta's retirement upgrade: test a newer API version against a Meta test account,
+then update the pin deliberately. See [Meta's version calendar](https://developers.facebook.com/docs/graph-api/changelog/).
 
 ## Licence
 

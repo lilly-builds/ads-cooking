@@ -64,7 +64,12 @@ immediately.
 
 ## Versioning
 
-This kit pins `v21.0` in `adscooking/graph.py`. Meta supports a version for about two years and then
-auto-upgrades calls, which can change behaviour without warning. When you bump it, re-run the tests
-first: they assert payload shapes, so a field that moved or was renamed shows up there rather than
-in production.
+This kit pins `v21.0` in `adscooking/graph.py`, the version the project was tested against. Meta's
+[version calendar](https://developers.facebook.com/docs/graph-api/changelog/) lists `v21.0` as
+available through **21 January 2027**; newer versions already exist. Do not let retirement choose
+the upgrade for you. Before that date, test the complete connection, publish, update, and pulse
+flows against a Meta test account, then change `DEFAULT_VERSION` deliberately.
+
+Run the local tests after the version change, but do not call that sufficient proof: they validate
+payload shapes without contacting Meta. The test-account run is what catches a field that moved,
+was renamed, or now needs a different permission.
