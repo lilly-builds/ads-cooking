@@ -56,8 +56,8 @@ This tool can spend your ad budget. So it is built to make that hard to do by ac
 ```
 Check these before you run it for real:
 
-  Budget      $20.00 a day, about $600 a month
-  Audience    women, 30 to 45, in US
+  Budget      $30.00 a day, about $900 a month
+  Audience    all genders, 25 to 65, in US, GB, CA, DE, AU
   Placements  facebook, instagram
   Copy        3 primary texts, 2 headlines
   Leads go to the instant form 'Lead form v1'
