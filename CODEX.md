@@ -59,7 +59,7 @@ read the relevant `SKILL.md` before changing a workflow.
 ## Setup and verification
 
 ```bash
-python3 -m unittest discover -s tests -t .    # 130 tests, no network, no ad account
+python3 -m unittest discover -s tests -t .    # 133 tests, no network, no ad account
 ./scripts/check.sh                            # the full pre-push gate
 ```
 

@@ -86,9 +86,17 @@ that cannot be undone. It is code with tests behind it now: `adscooking/setup.py
 PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking connect --business-id <ID>
 ```
 
-Almost every later URL is scoped to that id. With it, steps 4 to 7 are links that land on the
-right screen; without it, the user is told to go hunting in Business Settings, which is where the
-setup time goes. Add `--page-id` and `--app-id` as they appear and re-run. Re-running is safe.
+Almost every later URL is scoped to that id, so with it each step lands in the right portfolio
+instead of sending the user hunting, which is where the setup time goes. Add `--page-id` and
+`--app-id` as they appear and re-run. Re-running is safe.
+
+**Do not add a Business Settings deep link you have not opened.** The first version of that list
+deep-linked four sections written from memory, and Meta renames these and moves them between
+Business Manager and Business Suite. A link that 404s costs the user the same time as no link and
+also makes the tool look wrong. Sections nobody has checked get the Business Settings root plus
+the sidebar clicks in words. `VERIFIED_PATHS` in `adscooking/setup.py` is the allowlist, and
+`tests/test_setup.py` fails the build on anything outside it. To add one: open it, confirm it
+lands, then add its prefix with a comment saying what proved it.
 
 If the git check says STOP, stop. Add the config folder to that repository's `.gitignore` before
 a token goes anywhere near it.
@@ -242,4 +250,4 @@ being in trouble.
 | `adscooking/pulse.py` | The read-only monitor |
 | `skills/` | The Claude Code commands |
 | `context/` | Setup guide, API notes, and the research behind the thresholds |
-| `tests/` | 130 tests, including the in-memory Graph API |
+| `tests/` | 133 tests, including the in-memory Graph API |
