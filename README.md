@@ -25,9 +25,9 @@ Open Claude Code in any folder and type:
 
 Then tell it about your ads in plain English. Something like:
 
-> I run a scheduling app for dental offices. $89 a month. I want demo requests from
-> practice managers in the US. Budget is $30 a day. I have a 30 second product video.
-> Here's my pricing page: example.com
+> I sell an error tracking tool for dev teams. $99 a month. I want demo requests
+> from engineering managers at US startups. Budget is $30 a day. I have a 30 second
+> demo video. Here's my pricing page: example.com
 
 Claude takes it from there. It figures out where you are, sets up your account connection, and walks you through the parts only you can do. It stops and asks before anything spends money.
 
