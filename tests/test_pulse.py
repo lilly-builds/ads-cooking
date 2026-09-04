@@ -147,6 +147,31 @@ class TestExitCodes(unittest.TestCase):
 
 
 
+class TestTokenCheckIsReallyRun(unittest.TestCase):
+    """gather() must call debug_self, not skip it when the client lacks it."""
+
+    def test_gather_reads_the_token_expiry(self):
+        api = FakeGraph(allow_writes=False)
+        snap = gather(api, MONITOR)
+        self.assertIn(("debug_token", {}), api.gets)
+        self.assertIn("token", snap)
+
+    def test_a_failing_token_check_warns_instead_of_killing_the_report(self):
+        class Broken(FakeGraph):
+            def debug_self(self):
+                raise RuntimeError("Meta said no")
+
+        api = Broken(allow_writes=False)
+        snap = gather(api, MONITOR)
+        self.assertTrue(snap.get("token_check_failed"))
+        snap.update(snapshot(spend=90.0, leads=3))
+        snap["token_check_failed"] = True
+        findings = evaluate(snap, MONITOR, None)
+        text = " ".join(t for _, t in findings)
+        self.assertIn("could not read the token", text)
+        self.assertIn("per lead", text, "the rest of the report must still be there")
+
+
 class TestExpiryDate(unittest.TestCase):
     def test_the_warning_names_a_date_not_just_a_count(self):
         """A day count is not something you can put in a calendar."""

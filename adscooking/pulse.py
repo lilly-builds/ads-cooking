@@ -71,8 +71,10 @@ def gather(api, config: dict) -> dict:
     # the token warning on a day there is a real ALERT would be the worst
     # possible trade.
     try:
-        snapshot["token"] = api.debug_self() if hasattr(api, "debug_self") else {}
+        snapshot["token"] = api.debug_self()
     except Exception:
+        # Deliberately broad: whatever went wrong, losing the expiry warning is
+        # better than losing the whole report on a day there is a real alert.
         snapshot["token"] = {}
         snapshot["token_check_failed"] = True
     for preset in ("today", "yesterday", "maximum"):

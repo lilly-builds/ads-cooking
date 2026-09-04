@@ -42,7 +42,10 @@ def config_dir(start: Path | None = None) -> Path:
         return Path(override).expanduser()
 
     local = (start or Path.cwd()) / CONFIG_DIRNAME
-    if local.is_dir():
+    # A directory of the right name is not enough. The repo itself is called
+    # ads-cooking, so running from the parent of a clone would otherwise resolve
+    # the checkout as somebody's config folder. It has to actually hold config.
+    if local.is_dir() and any((local / f).is_file() for f in (ENV_FILENAME, CONFIG_FILENAME)):
         return local
     return Path.home() / f".{CONFIG_DIRNAME}"
 
@@ -54,7 +57,7 @@ def load_env(directory: Path | None = None) -> dict:
     if not path.is_file():
         raise ConfigError(
             f"No credentials file at {path}.\n"
-            f"Run /meta-connect to set one up, or copy .env.example there and fill it in."
+            f"Run /ads-cooking:connect to set one up, or copy .env.example there and fill it in."
         )
 
     values: dict[str, str] = {}

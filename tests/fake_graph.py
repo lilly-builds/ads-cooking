@@ -53,6 +53,17 @@ class FakeGraph:
                                                       "url": "https://example.invalid/i.jpg"}}}
         return {"id": self._next_id("upload")}
 
+    def debug_self(self):
+        """The real client has this, so the fake must too.
+
+        Without it the hasattr guard in pulse.gather silently skipped the token
+        check in every test, which is how the fix for it went untested.
+        """
+        if "debug_token" in self.responses:
+            return self.responses["debug_token"]
+        self.gets.append(("debug_token", {}))
+        return {"data": {}}
+
     def page_token(self, page_id):
         self.gets.append((f"{page_id}:page_token", {}))
         return "fake-page-token"

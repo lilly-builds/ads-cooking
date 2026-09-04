@@ -27,6 +27,20 @@ pip install -e .
 adscooking check
 ```
 
+## The commands
+
+| Subcommand | What it does | Can it spend money? |
+|---|---|---|
+| `check` | Prove the token reaches the account, page and forms | No |
+| `publish` | Create the campaign | Only with `--go`, and it lands paused |
+| `copy` | Change the wording on a live ad | Changes a live ad with `--go` |
+| `form` | Change the lead form questions | Changes a live ad with `--go` |
+| `pulse` | Spend, leads, cost per lead, edit detection | No, never |
+
+In Claude Code these are also slash commands (`/ads-cooking:check` and so on), and two more exist
+there with no CLI equivalent: `/ads-cooking:connect` walks the account setup, and
+`/ads-cooking:start` routes to whichever of the others you need.
+
 The `skills/` directory is Claude Code's command layer. It is not used by Codex, but the files
 are still the clearest written description of each workflow and what to tell a user about it, so
 read the relevant `SKILL.md` before changing a workflow.
@@ -34,7 +48,7 @@ read the relevant `SKILL.md` before changing a workflow.
 ## Setup and verification
 
 ```bash
-python3 -m unittest discover -s tests -t .    # 85 tests, no network, no ad account
+python3 -m unittest discover -s tests -t .    # 91 tests, no network, no ad account
 ./scripts/check.sh                            # the full pre-push gate
 ```
 

@@ -28,9 +28,31 @@ PYTHONPATH="$(pwd)" python3 -m adscooking <command>
 
 Skills must always use the first form. `./scripts/check.sh` fails the build if one does not.
 
+
+## The commands
+
+Installed as a plugin, these are the slash commands. They are namespaced by the plugin, so the
+prefix is part of the name.
+
+| Command | What it does | Can it spend money? |
+|---|---|---|
+| `/ads-cooking:start` | Works out where the user is and routes to the right one | No |
+| `/ads-cooking:connect` | Connect an ad account, ending with a working token | No |
+| `/ads-cooking:check` | Prove the token reaches the account, page and forms | No |
+| `/ads-cooking:publish` | Create the campaign | Only with `--go`, and it lands paused |
+| `/ads-cooking:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
+| `/ads-cooking:form` | Change the lead form questions | Changes a live ad with `--go` |
+| `/ads-cooking:pulse` | Spend, leads, cost per lead, edit detection | No, never |
+
+Each maps to a subcommand of the same name, minus `start`, which only routes:
+
+```bash
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <check|publish|copy|form|pulse>
+```
+
 ## The skills
 
-`skills/ads-cooking/SKILL.md` is the front door and routes to the other six. If you are adding a
+`skills/start/SKILL.md` is the front door and routes to the other six. If you are adding a
 skill, match the existing shape: frontmatter with `name` and `description`, the exact command,
 what to tell the user, and an explicit "what not to do".
 

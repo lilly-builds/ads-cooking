@@ -77,7 +77,8 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.command == "publish":
             config = load_campaign(directory)
-            publish(config, env, go=args.go, base_dir=directory)
+            publish(config, env, go=args.go, base_dir=directory,
+                    resume=config.get('live'))
             return 0
 
         if args.command in ("copy", "form", "pulse"):

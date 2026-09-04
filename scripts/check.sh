@@ -64,6 +64,9 @@ print("   OK   all internal links resolve" if not bad else f"   {bad} broken")
 sys.exit(1 if bad else 0)
 PY
 
+section "6b. Docs match the code"
+python3 scripts/check_docs.py || fail=1
+
 section "7. No secrets"
 # Meta system-user tokens start with EAA and run to a few hundred characters.
 if grep -rIn --exclude-dir=.git --exclude-dir=scripts -E '\bEAA[A-Za-z0-9]{40,}' . ; then

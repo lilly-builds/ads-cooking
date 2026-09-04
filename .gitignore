@@ -8,6 +8,10 @@
 !.env.example
 ads-cooking/
 .ads-cooking/
+# belt and braces: the config files themselves, wherever they end up
+campaign.json
+pulse-state.json
+pulse-history.jsonl
 # pre-rename folder name, kept so an old local config cannot slip in
 meta-ads/
 .meta-ads/

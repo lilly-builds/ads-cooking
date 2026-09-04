@@ -11,6 +11,27 @@ daily pulse.
 
 **This code spends real money on advertising.** Every rule below exists because of that.
 
+## The commands
+
+Installed as a plugin, these are the slash commands. They are namespaced by the plugin, so the
+prefix is part of the name.
+
+| Command | What it does | Can it spend money? |
+|---|---|---|
+| `/ads-cooking:start` | Works out where the user is and routes to the right one | No |
+| `/ads-cooking:connect` | Connect an ad account, ending with a working token | No |
+| `/ads-cooking:check` | Prove the token reaches the account, page and forms | No |
+| `/ads-cooking:publish` | Create the campaign | Only with `--go`, and it lands paused |
+| `/ads-cooking:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
+| `/ads-cooking:form` | Change the lead form questions | Changes a live ad with `--go` |
+| `/ads-cooking:pulse` | Spend, leads, cost per lead, edit detection | No, never |
+
+Each maps to a subcommand of the same name, minus `start`, which only routes:
+
+```bash
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <check|publish|copy|form|pulse>
+```
+
 ## Rules you must not break
 
 1. **Never run a `--go` command unless the user asked for it in that turn.** `publish`, `copy` and
@@ -36,7 +57,7 @@ git clone https://github.com/lilly-builds/ads-cooking
 cd ads-cooking
 
 # 1. Tests. No dependencies, no network, no ad account.
-python3 -m unittest discover -s tests -t .        # expect: 85 tests, OK
+python3 -m unittest discover -s tests -t .        # expect: 91 tests, OK
 
 # 2. The full gate.
 ./scripts/check.sh                                 # expect: ALL CHECKS PASSED
@@ -174,4 +195,4 @@ being in trouble.
 | `adscooking/pulse.py` | The read-only monitor |
 | `skills/` | The Claude Code commands |
 | `context/` | Setup guide, API notes, and the research behind the thresholds |
-| `tests/` | 85 tests, including the in-memory Graph API |
+| `tests/` | 91 tests, including the in-memory Graph API |
