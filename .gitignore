@@ -6,6 +6,9 @@
 .env
 .env.*
 !.env.example
+ads-cooking/
+.ads-cooking/
+# pre-rename folder name, kept so an old local config cannot slip in
 meta-ads/
 .meta-ads/
 

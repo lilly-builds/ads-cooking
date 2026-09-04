@@ -1,6 +1,6 @@
 ---
 name: check
-description: Check that the Meta connection works, before publishing or when something has stopped working. Tests the token, the ad account, the page, and lead form access in the order they usually break, and names the fix for whichever one failed. Read-only, spends nothing. Use when the user says "/meta-ads:check", "is my Meta connection working", "check my token", "my ads stopped working", or before any publish.
+description: Check that the Meta connection works, before publishing or when something has stopped working. Tests the token, the ad account, the page, and lead form access in the order they usually break, and names the fix for whichever one failed. Read-only, spends nothing. Use when the user says "/ads-cooking:check", "is my Meta connection working", "check my token", "my ads stopped working", or before any publish.
 ---
 
 # Check the Meta connection
@@ -10,7 +10,7 @@ Four reads, in the order things actually break. Run this first whenever anything
 ## Run it
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads check
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking check
 ```
 
 Exit code `0` means everything works and they can publish.

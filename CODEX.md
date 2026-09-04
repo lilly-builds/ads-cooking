@@ -17,14 +17,14 @@ you even if you read nothing else.
 There is no plugin root here, so use the repo:
 
 ```bash
-PYTHONPATH="$(pwd)" python3 -m metaads <command>
+PYTHONPATH="$(pwd)" python3 -m adscooking <command>
 ```
 
-Or install it, which puts a `metaads` command on the path:
+Or install it, which puts a `adscooking` command on the path:
 
 ```bash
 pip install -e .
-metaads check
+adscooking check
 ```
 
 The `skills/` directory is Claude Code's command layer. It is not used by Codex, but the files

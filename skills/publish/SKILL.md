@@ -1,6 +1,6 @@
 ---
 name: publish
-description: Create a Meta lead campaign from a config file: campaign, ad set, video, thumbnail, lead form, creative and ad. Shows exactly what it would do first and creates nothing until told to go, then creates everything paused. Use when the user says "/meta-ads:publish", "publish my campaign", "launch the ad", "create the Meta campaign", or has a video and copy ready and wants it live.
+description: Create a Meta lead campaign from a config file: campaign, ad set, video, thumbnail, lead form, creative and ad. Shows exactly what it would do first and creates nothing until told to go, then creates everything paused. Use when the user says "/ads-cooking:publish", "publish my campaign", "launch the ad", "create the Meta campaign", or has a video and copy ready and wants it live.
 ---
 
 # Publish a campaign
@@ -11,7 +11,7 @@ and everything that is created is PAUSED.
 ## Always dry run first
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads publish
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking publish
 ```
 
 This sends nothing. It prints the budget, the audience, the placements, the creative and where
@@ -20,7 +20,7 @@ leads land. **Show the user that summary and wait.** Do not run the next command
 ## Then, only if they say yes
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads publish --go
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking publish --go
 ```
 
 It prints the ids it created. Paste them into the `live` section of `campaign.json`, or `copy`,

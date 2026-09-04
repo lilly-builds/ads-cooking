@@ -1,6 +1,6 @@
 ---
 name: pulse
-description: One read-only check of a live Meta campaign. Reports spend, leads and cost per lead against a benchmark band, flags anyone editing the live ad, and warns before the token expires. Never writes to Meta and never changes an ad. Use when the user says "/meta-ads:pulse", "how are my ads doing", "check the campaign", "what's my cost per lead", or wants a daily or morning check on live ads.
+description: One read-only check of a live Meta campaign. Reports spend, leads and cost per lead against a benchmark band, flags anyone editing the live ad, and warns before the token expires. Never writes to Meta and never changes an ad. Use when the user says "/ads-cooking:pulse", "how are my ads doing", "check the campaign", "what's my cost per lead", or wants a daily or morning check on live ads.
 ---
 
 # Check a live campaign
@@ -11,7 +11,7 @@ spend should not also be able to change it.
 ## Run it
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads pulse
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking pulse
 ```
 
 Exit code is the verdict:
@@ -75,7 +75,7 @@ ask why it did not check.
 
 ## Running it daily
 
-If the user has the `/loop` skill, `/loop 24h /meta-ads:pulse` runs it daily. Otherwise a cron
+If the user has the `/loop` skill, `/loop 24h /ads-cooking:pulse` runs it daily. Otherwise a cron
 entry or a launchd agent does the same thing; the command is a plain shell command with a
 meaningful exit code, so anything that can run one works.
 

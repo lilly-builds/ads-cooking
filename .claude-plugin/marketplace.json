@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "meta-ads",
+      "name": "ads-cooking",
       "source": "./",
       "displayName": "Meta Ads Kit",
       "description": "Run a Meta lead-generation campaign from Claude Code: connect the ad account, publish a campaign, change live ad copy and lead forms, and check spend and cost per lead every morning. Writes are opt-in and everything is created paused, so nothing spends money without a person saying so.",

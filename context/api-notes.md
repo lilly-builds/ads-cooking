@@ -6,7 +6,7 @@ Things that cost hours the first time. Read this before debugging an error.
 
 **1. Lead forms cannot be edited.** Once published, a form is frozen. Changing a question means
 creating a new form, a new creative pointing at it, and swapping that onto the ad. This is why
-`metaads form` looks like it does more than it should.
+`adscooking form` looks like it does more than it should.
 
 **2. Ad creatives cannot be edited either.** Same pattern: a copy change is a new creative and a
 swap. The ad keeps its id, so its delivery history survives.
@@ -37,7 +37,7 @@ These came up in order on a first publish. Each is a one-line fix.
 | `Each bullet point should be under 80 characters for LIST_STYLE` | Shorten the greeting bullets, or switch to `PARAGRAPH_STYLE`. |
 | `Ads creative post was created by an app that is in development mode` | Flip the app to Live: App Settings, add a Privacy Policy URL, then change App Mode to Live. A development-mode app cannot create ad creatives. |
 
-The first five are handled for you in `metaads/publish.py`. The last three depend on your content
+The first five are handled for you in `adscooking/publish.py`. The last three depend on your content
 and your app, so they can still bite.
 
 ## Two rules Meta enforces on lead forms
@@ -53,7 +53,7 @@ and your app, so they can still bite.
 | The token cannot see the ad account | The ad account is personal, not owned by the business portfolio | Move it into the portfolio. A system user can only reach assets the portfolio owns. |
 | Assets still show "none assigned" after assigning them | The settings UI caches | Refresh the page. Do not assign them again. |
 | Calls fail with the wrong ad account id | The number in the URL was used | The URL's `selected_asset_id` is an internal wrapper. Use the id shown in the panel text. |
-| Everything stops working after about two months | The 60-day token expired | Regenerate it and update `.env`. `metaads pulse` warns 14 days out. |
+| Everything stops working after about two months | The 60-day token expired | Regenerate it and update `.env`. `adscooking pulse` warns 14 days out. |
 
 ## Rate limits
 
@@ -64,7 +64,7 @@ immediately.
 
 ## Versioning
 
-This kit pins `v21.0` in `metaads/graph.py`. Meta supports a version for about two years and then
+This kit pins `v21.0` in `adscooking/graph.py`. Meta supports a version for about two years and then
 auto-upgrades calls, which can change behaviour without warning. When you bump it, re-run the tests
 first: they assert payload shapes, so a field that moved or was renamed shows up there rather than
 in production.

@@ -3,7 +3,7 @@
 import json
 import unittest
 
-from metaads.graph import Graph, GraphError
+from adscooking.graph import Graph, GraphError
 from tests.fake_graph import http_error
 
 
@@ -56,19 +56,19 @@ class TestNestedParameterEncoding(unittest.TestCase):
     """
 
     def test_a_nested_dict_becomes_json_not_a_python_repr(self):
-        from metaads.graph import _encode_nested
+        from adscooking.graph import _encode_nested
         encoded = _encode_nested({"targeting": {"geo_locations": {"countries": ["US"]}}})
         self.assertNotIn("'", encoded["targeting"])
         self.assertEqual(json.loads(encoded["targeting"]),
                          {"geo_locations": {"countries": ["US"]}})
 
     def test_a_list_becomes_json(self):
-        from metaads.graph import _encode_nested
+        from adscooking.graph import _encode_nested
         self.assertEqual(json.loads(_encode_nested({"x": [1, 2]})["x"]), [1, 2])
 
     def test_booleans_become_json_not_python_capitalised(self):
         """Python's str(False) is "False". Meta wants "false"."""
-        from metaads.graph import _encode_nested
+        from adscooking.graph import _encode_nested
         self.assertEqual(_encode_nested({"x": False})["x"], "false")
 
     def test_a_string_that_is_already_json_is_left_alone(self):
@@ -77,18 +77,18 @@ class TestNestedParameterEncoding(unittest.TestCase):
         Double-encoding it would send an escaped string where Meta wants an
         array.
         """
-        from metaads.graph import _encode_nested
+        from adscooking.graph import _encode_nested
         original = '[{"type":"EMAIL"}]'
         self.assertEqual(_encode_nested({"questions": original})["questions"], original)
 
     def test_plain_values_pass_through(self):
-        from metaads.graph import _encode_nested
+        from adscooking.graph import _encode_nested
         self.assertEqual(_encode_nested({"name": "x", "n": 5}), {"name": "x", "n": 5})
 
     def test_the_whole_body_survives_urlencoding_as_valid_json(self):
         """End to end: what actually goes on the wire is parseable by Meta."""
         import urllib.parse
-        from metaads.graph import _encode_nested
+        from adscooking.graph import _encode_nested
         body = _encode_nested({"targeting": {"age_min": 30}, "name": "ad set"})
         round_tripped = dict(urllib.parse.parse_qsl(urllib.parse.urlencode(body)))
         self.assertEqual(json.loads(round_tripped["targeting"]), {"age_min": 30})

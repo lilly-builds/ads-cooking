@@ -2,7 +2,7 @@
 
 import unittest
 
-from metaads.pulse import (ALERT, EXIT_CODES, INFO, WARN, evaluate, gather,
+from adscooking.pulse import (ALERT, EXIT_CODES, INFO, WARN, evaluate, gather,
                            snapshot_state, token_days_left, worst)
 from tests.fake_graph import FakeGraph
 
@@ -151,14 +151,14 @@ class TestExpiryDate(unittest.TestCase):
     def test_the_warning_names_a_date_not_just_a_count(self):
         """A day count is not something you can put in a calendar."""
         import time
-        from metaads.pulse import token_expiry_date
+        from adscooking.pulse import token_expiry_date
         soon = int(time.time()) + 5 * 86400
         current = snapshot(token={"data": {"expires_at": soon}})
         text = " ".join(t for _, t in evaluate(current, MONITOR, None))
         self.assertIn(token_expiry_date({"data": {"expires_at": soon}}), text)
 
     def test_a_never_expiring_token_reports_never(self):
-        from metaads.pulse import token_expiry_date
+        from adscooking.pulse import token_expiry_date
         self.assertEqual(token_expiry_date({"data": {}}), "never")
 
 if __name__ == "__main__":

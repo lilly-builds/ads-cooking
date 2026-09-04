@@ -1,6 +1,6 @@
 ---
 name: copy
-description: Change the wording on a live Meta ad. Builds a new creative with the new text and points the existing ad at it, so the ad keeps its id and its delivery history. Use when the user says "/meta-ads:copy", "change the ad copy", "update the headline", "the wording isn't working", or wants to test different text on a running ad.
+description: Change the wording on a live Meta ad. Builds a new creative with the new text and points the existing ad at it, so the ad keeps its id and its delivery history. Use when the user says "/ads-cooking:copy", "change the ad copy", "update the headline", "the wording isn't working", or wants to test different text on a running ad.
 ---
 
 # Change the copy on a live ad
@@ -21,13 +21,13 @@ across near-identical ads.
 ## Run it
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads copy
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking copy
 ```
 
 Dry run. Shows what would change, sends nothing. Then, only if they confirm:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads copy --go
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking copy --go
 ```
 
 ## Before running it on a campaign that is still learning

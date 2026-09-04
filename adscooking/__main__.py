@@ -1,4 +1,4 @@
-"""Command line entry point: python3 -m metaads <command>."""
+"""Command line entry point: python3 -m adscooking <command>."""
 
 from __future__ import annotations
 
@@ -18,12 +18,12 @@ from .update import update_copy, update_form
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="metaads",
+        prog="adscooking",
         description="Run a Meta lead campaign. Reads are free; writes need --go.",
     )
     parser.add_argument("--version", action="version", version=f"ads-cooking {__version__}")
     parser.add_argument("--config-dir", type=Path, default=None,
-                        help="Where campaign.json and .env live (default: ./meta-ads or ~/.meta-ads)")
+                        help="Where campaign.json and .env live (default: ./ads-cooking or ~/.ads-cooking)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     sub.add_parser("check", help="Prove the token reaches the account, page and forms")

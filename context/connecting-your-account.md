@@ -108,17 +108,17 @@ document, or a commit. If you lose it, generate another.
 ## 10. Set up the config folder
 
 ```bash
-mkdir -p meta-ads
-cp "${CLAUDE_PLUGIN_ROOT}/.env.example" meta-ads/.env
-cp "${CLAUDE_PLUGIN_ROOT}/campaign.example.json" meta-ads/campaign.json
+mkdir -p ads-cooking
+cp "${CLAUDE_PLUGIN_ROOT}/.env.example" ads-cooking/.env
+cp "${CLAUDE_PLUGIN_ROOT}/campaign.example.json" ads-cooking/campaign.json
 ```
 
-Fill in the three values in `meta-ads/.env`. Make sure `meta-ads/` is gitignored.
+Fill in the three values in `ads-cooking/.env`. Make sure `ads-cooking/` is gitignored.
 
 ## 11. Prove it works
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads check
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking check
 ```
 
 This checks the token, the ad account, the Page and lead form access, in the order they break. A
@@ -134,6 +134,6 @@ mode, so this only surfaces at the last step of your first publish.
 
 ## Keeping it working
 
-- If you chose a 60-day token, regenerate it before it lapses. `metaads pulse` warns 14 days out.
+- If you chose a 60-day token, regenerate it before it lapses. `adscooking pulse` warns 14 days out.
   When it dies the ads keep running, but every command here stops working silently.
 - The token is a key to your ad spend. Treat it like a password.

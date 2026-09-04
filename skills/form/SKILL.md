@@ -1,6 +1,6 @@
 ---
 name: form
-description: Change the questions or wording on a live Meta lead form. Meta forms cannot be edited, so this creates a new form, a new creative pointing at it, and swaps it onto the live ad. Use when the user says "/meta-ads:form", "change the lead form", "add a question to the form", "the form is asking the wrong things", or wants to change what leads are asked.
+description: Change the questions or wording on a live Meta lead form. Meta forms cannot be edited, so this creates a new form, a new creative pointing at it, and swaps it onto the live ad. Use when the user says "/ads-cooking:form", "change the lead form", "add a question to the form", "the form is asking the wrong things", or wants to change what leads are asked.
 ---
 
 # Change a live lead form
@@ -25,13 +25,13 @@ In `campaign.json`, under `lead_form`. Two rules Meta enforces and will reject t
 ## Run it
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads form
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking form
 ```
 
 Dry run first. Then, only if they confirm:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads form --go
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking form --go
 ```
 
 ## Afterwards, do not skip this

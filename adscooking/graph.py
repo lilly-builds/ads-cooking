@@ -138,7 +138,7 @@ class Graph:
 
     def upload(self, path: str, field: str, file_path, extra: dict | None = None):
         """Multipart upload, used for /advideos and /adimages."""
-        boundary = f"----metaads{uuid.uuid4().hex}"
+        boundary = f"----adscooking{uuid.uuid4().hex}"
         fields = _encode_nested(extra or {})
         fields["access_token"] = self._token
         body = bytearray()

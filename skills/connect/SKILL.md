@@ -1,6 +1,6 @@
 ---
 name: connect
-description: Connect a Meta ad account so the other commands can run, ending in a working token and a config folder. Walks the Business Settings steps in order, creates the .env and campaign.json, and finishes by proving the connection works. Use when the user says "/meta-ads:connect", "connect my Meta account", "set up Meta ads", "I need a Meta token", or when another command reports that nothing is configured.
+description: Connect a Meta ad account so the other commands can run, ending in a working token and a config folder. Walks the Business Settings steps in order, creates the .env and campaign.json, and finishes by proving the connection works. Use when the user says "/ads-cooking:connect", "connect my Meta account", "set up Meta ads", "I need a Meta token", or when another command reports that nothing is configured.
 ---
 
 # Connect a Meta ad account
@@ -24,28 +24,28 @@ Settings, and it is easy to get lost.
 4. Generate the token with `ads_management`, `leads_retrieval`, `pages_show_list` and
    `pages_manage_ads`.
 5. Set up the config folder (below).
-6. Run `/meta-ads:check` and do not stop until it is clean.
+6. Run `/ads-cooking:check` and do not stop until it is clean.
 
 ## The config folder
 
-Create `meta-ads/` in their project, or `~/.meta-ads/`:
+Create `ads-cooking/` in their project, or `~/.ads-cooking/`:
 
 ```bash
-mkdir -p meta-ads
-cp ${CLAUDE_PLUGIN_ROOT}/.env.example meta-ads/.env
-cp ${CLAUDE_PLUGIN_ROOT}/campaign.example.json meta-ads/campaign.json
+mkdir -p ads-cooking
+cp ${CLAUDE_PLUGIN_ROOT}/.env.example ads-cooking/.env
+cp ${CLAUDE_PLUGIN_ROOT}/campaign.example.json ads-cooking/campaign.json
 ```
 
 Verify it end to end before saying you are done:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads check
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking check
 ```
 
-Then have **them** paste the token into `meta-ads/.env`. Do not ask them to read it out, do not
+Then have **them** paste the token into `ads-cooking/.env`. Do not ask them to read it out, do not
 put it in chat, and do not echo the file back afterwards.
 
-Check `meta-ads/` is gitignored before finishing. If their project has a `.gitignore`, add it.
+Check `ads-cooking/` is gitignored before finishing. If their project has a `.gitignore`, add it.
 
 ## Two things to say out loud at the end
 
@@ -54,5 +54,5 @@ Check `meta-ads/` is gitignored before finishing. If their project has a `.gitig
   forget. Whichever they pick, **write it down in their notes**, because the two fail completely
   differently: a 60-day token stops everything on a date you can predict, and a never-expiring
   one stays a live key to their ad spend until someone revokes it. A standard 60-day token means the ads keep running when it
-  dies but every command here stops working, quietly. `/meta-ads:pulse` warns 14 days out.
+  dies but every command here stops working, quietly. `/ads-cooking:pulse` warns 14 days out.
 - **The token is a key to their ad spend.** Secrets file only. Never in git, chat, or a doc.

@@ -42,12 +42,12 @@ python3 -m unittest discover -s tests -t .        # expect: 85 tests, OK
 ./scripts/check.sh                                 # expect: ALL CHECKS PASSED
 
 # 3. A config folder for the user to fill in.
-mkdir -p meta-ads
-cp .env.example meta-ads/.env
-cp campaign.example.json meta-ads/campaign.json
+mkdir -p ads-cooking
+cp .env.example ads-cooking/.env
+cp campaign.example.json ads-cooking/campaign.json
 
 # 4. Confirm it is ignored by git before anything else happens.
-git check-ignore meta-ads/.env                     # expect: meta-ads/.env
+git check-ignore ads-cooking/.env                     # expect: ads-cooking/.env
 ```
 
 Requires Python 3.10 or newer. Nothing else: no pip install, no virtualenv, no lockfile.
@@ -76,11 +76,11 @@ The parts that are unavoidably theirs:
 
 Tell them, in these words or close to them:
 
-> Meta will show the token once. Copy it straight into `meta-ads/.env` after
+> Meta will show the token once. Copy it straight into `ads-cooking/.env` after
 > `META_SYSTEM_USER_TOKEN=`. Do not paste it into this chat, a document, or anywhere else. If it
 > ends up somewhere it should not, regenerate it and the old one dies.
 
-Then have them fill in the other two values in `meta-ads/.env`:
+Then have them fill in the other two values in `ads-cooking/.env`:
 
 - `META_AD_ACCOUNT_ID` from Ads Manager, top left. **The number in the panel text, not the
   `selected_asset_id` in the URL.** The URL number is an internal wrapper and produces confusing
@@ -90,7 +90,7 @@ Then have them fill in the other two values in `meta-ads/.env`:
 Verify before moving on:
 
 ```bash
-PYTHONPATH="$(pwd)" python3 -m metaads check
+PYTHONPATH="$(pwd)" python3 -m adscooking check
 ```
 
 Exit 0 means done. If lead forms fail while everything else passes, the system user has the ad
@@ -134,17 +134,17 @@ Do not offer to do this for them, and do not add a command that does.
 ## After a publish, do not forget this
 
 `publish --go` prints the ids it created. **Write them into the `live` section of
-`meta-ads/campaign.json`.** If you skip it, `copy`, `form` and `pulse` have nothing to work on,
+`ads-cooking/campaign.json`.** If you skip it, `copy`, `form` and `pulse` have nothing to work on,
 and re-running `publish` will build a second campaign rather than resuming the first.
 
 ## Conventions
 
 - **One command form**, everywhere, no exceptions:
-  `PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads <command>`. A skill with a bare
-  `python3 -m metaads` fails for anyone not sitting in the repo. `check.sh` section 5 catches it.
+  `PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <command>`. A skill with a bare
+  `python3 -m adscooking` fails for anyone not sitting in the repo. `check.sh` section 5 catches it.
 - **No dependencies.** Standard library only, tests included. Do not add a package.
 - **Settings are data.** New knobs go in `campaign.json`, not in code.
-- **`metaads/graph.py` is the only module that talks to Meta.** Everything else builds payloads
+- **`adscooking/graph.py` is the only module that talks to Meta.** Everything else builds payloads
   and hands them over. That is what makes the tests possible; do not route around it.
 - **Every Meta quirk gets a comment saying why**, because none of them are guessable from the
   code. `context/api-notes.md` is the long form.
@@ -167,11 +167,11 @@ being in trouble.
 
 | Path | What |
 |---|---|
-| `metaads/graph.py` | The only module that talks to Meta |
-| `metaads/config.py` | Loading credentials and settings, and refusing to guess |
-| `metaads/publish.py` | The seven publish steps, dry run and resume |
-| `metaads/update.py` | Copy and lead form changes |
-| `metaads/pulse.py` | The read-only monitor |
+| `adscooking/graph.py` | The only module that talks to Meta |
+| `adscooking/config.py` | Loading credentials and settings, and refusing to guess |
+| `adscooking/publish.py` | The seven publish steps, dry run and resume |
+| `adscooking/update.py` | Copy and lead form changes |
+| `adscooking/pulse.py` | The read-only monitor |
 | `skills/` | The Claude Code commands |
 | `context/` | Setup guide, API notes, and the research behind the thresholds |
 | `tests/` | 85 tests, including the in-memory Graph API |

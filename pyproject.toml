@@ -14,7 +14,7 @@ keywords = ["meta", "facebook", "instagram", "advertising", "marketing-api", "le
 dependencies = []
 
 [project.scripts]
-metaads = "metaads.__main__:main"
+adscooking = "adscooking.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/lilly-builds/ads-cooking"
@@ -24,4 +24,4 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["metaads"]
+packages = ["adscooking"]

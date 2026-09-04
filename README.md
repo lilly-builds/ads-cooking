@@ -9,28 +9,28 @@ everything.
 
 ```
 /plugin marketplace add lilly-builds/ads-cooking
-/plugin install meta-ads@ads-cooking
+/plugin install ads-cooking@ads-cooking
 ```
 
-Commands are namespaced by the plugin, so they are `/meta-ads:check`, `/meta-ads:publish` and so
-on. `/meta-ads:start` is the front door if you are not sure which you want.
+Commands are namespaced by the plugin, so they are `/ads-cooking:check`, `/ads-cooking:publish` and so
+on. `/ads-cooking:start` is the front door if you are not sure which you want.
 
 ## The commands
 
 | Command | What it does | Can it spend money? |
 |---|---|---|
-| `/meta-ads:start` | Works out where you are and routes to the right one | No |
-| `/meta-ads:connect` | Connect an ad account, ending with a working token | No |
-| `/meta-ads:check` | Prove the token reaches the account, page and forms | No |
-| `/meta-ads:publish` | Create the campaign | Only with `--go`, and it lands paused |
-| `/meta-ads:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
-| `/meta-ads:form` | Change the lead form questions | Changes a live ad with `--go` |
-| `/meta-ads:pulse` | Spend, leads, cost per lead, and edit detection | No, never |
+| `/ads-cooking:start` | Works out where you are and routes to the right one | No |
+| `/ads-cooking:connect` | Connect an ad account, ending with a working token | No |
+| `/ads-cooking:check` | Prove the token reaches the account, page and forms | No |
+| `/ads-cooking:publish` | Create the campaign | Only with `--go`, and it lands paused |
+| `/ads-cooking:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
+| `/ads-cooking:form` | Change the lead form questions | Changes a live ad with `--go` |
+| `/ads-cooking:pulse` | Spend, leads, cost per lead, and edit detection | No, never |
 
 Everything runs the same way, from any folder:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads <command>
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <command>
 ```
 
 ## Why it is built the way it is
@@ -104,16 +104,16 @@ It also has two sections most guidance leaves out:
 ## Setup
 
 ```bash
-mkdir -p meta-ads
-cp .env.example meta-ads/.env            # then fill in three values
-cp campaign.example.json meta-ads/campaign.json
-PYTHONPATH=. python3 -m metaads check
+mkdir -p ads-cooking
+cp .env.example ads-cooking/.env            # then fill in three values
+cp campaign.example.json ads-cooking/campaign.json
+PYTHONPATH=. python3 -m adscooking check
 ```
 
-`/meta-ads:connect` walks the Business Settings side of this, which is the fiddly part:
+`/ads-cooking:connect` walks the Business Settings side of this, which is the fiddly part:
 [`context/connecting-your-account.md`](context/connecting-your-account.md).
 
-Config lives in `meta-ads/` in your project, or `~/.meta-ads/`, or wherever `$META_ADS_HOME` points.
+Config lives in `ads-cooking/` in your project, or `~/.ads-cooking/`, or wherever `$ADS_COOKING_HOME` points.
 Deliberately never inside the plugin, because a plugin directory is replaced on update and that
 would silently delete your token.
 
@@ -144,11 +144,11 @@ Four bugs were found by the tests and by review rather than by running the code:
 
 | Path | What |
 |---|---|
-| `metaads/graph.py` | The only module that talks to Meta. Error classification lives here. |
-| `metaads/config.py` | Loading credentials and settings, and refusing to guess |
-| `metaads/publish.py` | The seven publish steps, dry run and resume |
-| `metaads/update.py` | Copy and lead form changes, both create-and-swap |
-| `metaads/pulse.py` | The read-only monitor. `evaluate()` is pure, so it is easy to test. |
+| `adscooking/graph.py` | The only module that talks to Meta. Error classification lives here. |
+| `adscooking/config.py` | Loading credentials and settings, and refusing to guess |
+| `adscooking/publish.py` | The seven publish steps, dry run and resume |
+| `adscooking/update.py` | Copy and lead form changes, both create-and-swap |
+| `adscooking/pulse.py` | The read-only monitor. `evaluate()` is pure, so it is easy to test. |
 | `skills/` | The Claude Code commands |
 | `context/` | The setup guide, the API notes, the research behind the thresholds |
 | `tests/` | 85 tests including `fake_graph.py` |

@@ -12,7 +12,7 @@ import json
 import os
 from pathlib import Path
 
-CONFIG_DIRNAME = "meta-ads"
+CONFIG_DIRNAME = "ads-cooking"
 CONFIG_FILENAME = "campaign.json"
 ENV_FILENAME = ".env"
 
@@ -33,11 +33,11 @@ def config_dir(start: Path | None = None) -> Path:
     Deliberately NOT inside the plugin. A plugin directory is replaced wholesale
     on update, which would silently delete a token. Order of preference:
 
-      1. $META_ADS_HOME, for anyone who wants it somewhere specific
-      2. ./meta-ads/ in the current project
-      3. ~/.meta-ads/
+      1. $ADS_COOKING_HOME, for anyone who wants it somewhere specific
+      2. ./ads-cooking/ in the current project
+      3. ~/.ads-cooking/
     """
-    override = os.environ.get("META_ADS_HOME")
+    override = os.environ.get("ADS_COOKING_HOME")
     if override:
         return Path(override).expanduser()
 

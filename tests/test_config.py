@@ -9,8 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from metaads import config
-from metaads.config import ConfigError, load_campaign, require_env
+from adscooking import config
+from adscooking.config import ConfigError, load_campaign, require_env
 
 
 class ConfigFolder(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestNeverGuesses(ConfigFolder):
         appear in the shipped code, only in tests and examples.
         """
         import re
-        package = Path(__file__).parent.parent / "metaads"
+        package = Path(__file__).parent.parent / "adscooking"
         offenders = [
             f"{path.name}: {match}"
             for path in package.glob("*.py")
@@ -108,15 +108,15 @@ class TestCampaignFile(ConfigFolder):
 class TestConfigLocation(unittest.TestCase):
     def test_env_var_wins(self):
         import os
-        os.environ["META_ADS_HOME"] = "/tmp/somewhere-specific"
-        self.addCleanup(os.environ.pop, "META_ADS_HOME", None)
+        os.environ["ADS_COOKING_HOME"] = "/tmp/somewhere-specific"
+        self.addCleanup(os.environ.pop, "ADS_COOKING_HOME", None)
         self.assertEqual(config.config_dir(), Path("/tmp/somewhere-specific"))
 
     def test_falls_back_to_home_when_no_local_folder(self):
         import os
-        os.environ.pop("META_ADS_HOME", None)
+        os.environ.pop("ADS_COOKING_HOME", None)
         empty = Path(tempfile.mkdtemp())
-        self.assertEqual(config.config_dir(empty), Path.home() / ".meta-ads")
+        self.assertEqual(config.config_dir(empty), Path.home() / ".ads-cooking")
 
 
 if __name__ == "__main__":

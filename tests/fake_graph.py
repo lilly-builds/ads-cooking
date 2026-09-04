@@ -1,6 +1,6 @@
 """An in-memory Meta Graph API.
 
-Same interface as metaads.graph.Graph, so the workflows cannot tell the
+Same interface as adscooking.graph.Graph, so the workflows cannot tell the
 difference. Every call is recorded, which lets the tests assert on the exact
 payloads that would go to Meta without a token, an ad account, or a network.
 
@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 
-from metaads.graph import GraphError
+from adscooking.graph import GraphError
 
 
 class FakeGraph:

@@ -9,10 +9,10 @@ fail=0
 section() { echo; echo "== $1"; }
 
 section "1. Tests"
-if python3 -m unittest discover -s tests -t . >/tmp/metaads-tests.log 2>&1; then
-  echo "   OK   $(grep -oE 'Ran [0-9]+ tests' /tmp/metaads-tests.log) passed"
+if python3 -m unittest discover -s tests -t . >/tmp/adscooking-tests.log 2>&1; then
+  echo "   OK   $(grep -oE 'Ran [0-9]+ tests' /tmp/adscooking-tests.log) passed"
 else
-  echo "   FAIL"; sed 's/^/        /' /tmp/metaads-tests.log | tail -30; fail=1
+  echo "   FAIL"; sed 's/^/        /' /tmp/adscooking-tests.log | tail -30; fail=1
 fi
 
 section "2. JSON syntax"
@@ -22,7 +22,7 @@ while IFS= read -r f; do
   else
     echo "   FAIL $f"; fail=1
   fi
-done < <(find . -name '*.json' -not -path './.git/*' -not -path './meta-ads/*')
+done < <(find . -name '*.json' -not -path './.git/*' -not -path './ads-cooking/*')
 
 section "3. Plugin manifest (strict)"
 if command -v claude >/dev/null 2>&1; then
@@ -41,9 +41,9 @@ while IFS= read -r f; do
 done < <(find skills -name SKILL.md | sort)
 
 section "5. Skills use the one documented command form"
-# Every runnable example must be PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads ...
-# A bare `python3 -m metaads` in a skill fails for anyone not sitting in the repo.
-bare=$(grep -rn '^python3 -m metaads' skills/ 2>/dev/null || true)
+# Every runnable example must be PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking ...
+# A bare `python3 -m adscooking` in a skill fails for anyone not sitting in the repo.
+bare=$(grep -rn '^python3 -m adscooking' skills/ 2>/dev/null || true)
 if [ -n "$bare" ]; then
   echo "   FAIL a skill has a command without PYTHONPATH:"; sed 's/^/        /' <<<"$bare"; fail=1
 else
@@ -71,11 +71,11 @@ if grep -rIn --exclude-dir=.git --exclude-dir=scripts -E '\bEAA[A-Za-z0-9]{40,}'
 else
   echo "   OK   no token-shaped strings"
 fi
-if [ -f .env ] || [ -d meta-ads ]; then
-  if git check-ignore -q .env meta-ads 2>/dev/null; then
+if [ -f .env ] || [ -d ads-cooking ]; then
+  if git check-ignore -q .env ads-cooking 2>/dev/null; then
     echo "   OK   local config is gitignored"
   else
-    echo "   FAIL a local .env or meta-ads/ is NOT gitignored"; fail=1
+    echo "   FAIL a local .env or ads-cooking/ is NOT gitignored"; fail=1
   fi
 fi
 if command -v gitleaks >/dev/null 2>&1; then

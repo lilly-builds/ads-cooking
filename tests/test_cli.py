@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from metaads.__main__ import SETUP_PROBLEM, main
+from adscooking.__main__ import SETUP_PROBLEM, main
 
 
 class TestExitCodes(unittest.TestCase):

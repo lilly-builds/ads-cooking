@@ -17,20 +17,20 @@ front of you even if you read nothing else.
 Installed as a plugin, from any folder:
 
 ```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m metaads <command>
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <command>
 ```
 
 Working inside a clone of the repo, `${CLAUDE_PLUGIN_ROOT}` is not set, so use the repo root:
 
 ```bash
-PYTHONPATH="$(pwd)" python3 -m metaads <command>
+PYTHONPATH="$(pwd)" python3 -m adscooking <command>
 ```
 
 Skills must always use the first form. `./scripts/check.sh` fails the build if one does not.
 
 ## The skills
 
-`skills/meta-ads/SKILL.md` is the front door and routes to the other six. If you are adding a
+`skills/ads-cooking/SKILL.md` is the front door and routes to the other six. If you are adding a
 skill, match the existing shape: frontmatter with `name` and `description`, the exact command,
 what to tell the user, and an explicit "what not to do".
 

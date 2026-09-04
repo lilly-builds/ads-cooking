@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from metaads.publish import DryRun, build_adset, build_campaign, build_creative, publish
+from adscooking.publish import DryRun, build_adset, build_campaign, build_creative, publish
 from tests.fake_graph import FakeGraph
 
 CONFIG = json.loads((Path(__file__).parent.parent / "campaign.example.json").read_text())
@@ -132,11 +132,11 @@ class TestThumbnailHash(CreativeOnDisk):
                         "an empty image hash means an ad with no thumbnail")
 
     def test_it_reads_the_nested_shape_meta_actually_sends(self):
-        from metaads.publish import image_hash
+        from adscooking.publish import image_hash
         self.assertEqual(image_hash({"images": {"whatever.jpg": {"hash": "abc"}}}), "abc")
 
     def test_a_response_with_no_hash_raises_rather_than_returning_empty(self):
-        from metaads.publish import image_hash
+        from adscooking.publish import image_hash
         with self.assertRaises(KeyError):
             image_hash({"images": {}})
         with self.assertRaises(KeyError):
@@ -249,13 +249,13 @@ class TestResume(CreativeOnDisk):
 class TestDryRunSummary(CreativeOnDisk):
     def test_it_warns_about_a_placeholder_privacy_policy(self):
         """Meta rejects the form, and it fails at step 5 after the video uploaded."""
-        from metaads.publish import summarise
+        from adscooking.publish import summarise
         api = DryRun()
         publish(CONFIG, ENV, go=False, client=api, base_dir=self.base)
         self.assertIn("example.com", summarise(CONFIG, api))
 
     def test_it_reports_the_monthly_spend_not_just_the_daily(self):
-        from metaads.publish import summarise
+        from adscooking.publish import summarise
         text = summarise(CONFIG, DryRun())
         self.assertIn("$20.00 a day", text)
         self.assertIn("$600 a month", text)

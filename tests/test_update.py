@@ -4,7 +4,7 @@ import contextlib
 import io
 import unittest
 
-from metaads.update import update_copy, update_form
+from adscooking.update import update_copy, update_form
 from tests.fake_graph import FakeGraph
 
 ENV = {"META_AD_ACCOUNT_ID": "act_000", "META_PAGE_ID": "page-000"}
