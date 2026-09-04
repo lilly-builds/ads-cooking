@@ -25,8 +25,9 @@ Open Claude Code in any folder and type:
 
 Then tell it about your ads in plain English. Something like:
 
-> I sell a $2,000 home organizing course. I want leads from women 30 to 45 in the US.
-> Budget is $20 a day. I have a vertical video ready. Here's my sales page: example.com
+> I run a scheduling app for dental offices. $89 a month. I want demo requests from
+> practice managers in the US. Budget is $30 a day. I have a 30 second product video.
+> Here's my pricing page: example.com
 
 Claude takes it from there. It figures out where you are, sets up your account connection, and walks you through the parts only you can do. It stops and asks before anything spends money.
 

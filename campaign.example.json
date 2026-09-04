@@ -17,8 +17,8 @@
       "countries": [
         "US"
       ],
-      "age_min": 30,
-      "age_max": 45,
+      "age_min": 25,
+      "age_max": 65,
       "_placements": "Manual, Reels and Stories only. Feed crops a 9:16 video and buries the caption.",
       "publisher_platforms": [
         "facebook",
@@ -31,7 +31,8 @@
       "instagram_positions": [
         "reels",
         "story"
-      ]
+      ],
+      "_placeholder": "These are placeholders. Set your own before you publish: an age range you copied from an example is not a targeting decision."
     }
   },
   "creative": {
@@ -42,7 +43,7 @@
     "cta_type": "SIGN_UP",
     "_texts": "Several of each. Meta picks the combination per person rather than splitting your budget across near-identical ads, which matters at a small daily budget.",
     "primary_texts": [
-      "First primary text goes here.",
+      "First primary text goes here. Say what the reader gets.",
       "A second angle on the same offer.",
       "A third, shorter one."
     ],

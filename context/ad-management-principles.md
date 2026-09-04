@@ -17,7 +17,7 @@ into automation; a MEDIUM one is a default worth overriding when your own data d
    through edits, not bad targeting. Never edit a live performer. Duplicate instead.
 2. **Patience scales inversely with volume.** At $20 a day, verdicts take weeks. No kill or scale
    decisions in the first 7 to 10 days short of a catastrophe.
-3. **$25 to $35 per lead is normal** for course and coaching offers through instant forms, on 2025
+3. **$25 to $35 per lead is normal** for the vertical this was benchmarked against, on 2025
    US medians. Do not panic-optimize inside the normal band.
 4. **Lead quality is a plumbing problem, not a form-tweaking problem.** Speed to lead, and feeding
    down-funnel outcomes back to Meta, beat rewriting form questions.
