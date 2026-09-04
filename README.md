@@ -26,8 +26,8 @@ Open Claude Code in any folder and type:
 Then tell it about your ads in plain English. Something like:
 
 > I sell an error tracking tool for dev teams. $99 a month. I want demo requests
-> from engineering managers at US startups. Budget is $30 a day. I have a 30 second
-> demo video. Here's my pricing page: example.com
+> from engineering managers. Start with the US, UK, Canada, Germany and Australia.
+> Budget is $30 a day. I have a 30 second demo video. Here's my pricing page: example.com
 
 Claude takes it from there. It figures out where you are, sets up your account connection, and walks you through the parts only you can do. It stops and asks before anything spends money.
 
@@ -162,7 +162,9 @@ It has run against one ad account. The tests cover what gets sent to Meta, and i
 
 It handles lead campaigns with instant forms and a vertical video. Other campaign types are not wired up.
 
-The cost-per-lead range it ships with is a US average. Use it as a starting point, then swap in numbers from your own industry.
+The cost-per-lead range it ships with is a US average. Swap in numbers for your own industry before you trust it.
+
+Running several countries at once is fine, but it gives you one blended cost per lead that hides everything. A $12 lead in Poland and a $60 lead in the US average out to something that looks normal and tells you nothing. If a market matters, give it its own ad set so you can see it and set a budget for it.
 
 It's pinned to version 21 of Meta's API. Meta upgrades old versions on its own, which can change behavior without telling you. Bump it on purpose and run the tests first.
 

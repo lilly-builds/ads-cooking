@@ -81,6 +81,11 @@ range rather than the centre.
 *Caveats:* one data family, skewed toward small and local advertisers, blended over April 2024 to
 June 2025, and not specific to instant forms. **Use the row for your vertical, not the topline.**
 
+**These are US figures.** Cost per lead moves several-fold between markets, so a US band applied to
+a campaign running in five countries will call normal results bad and bad results normal. If you
+run more than one market, either give each its own ad set and its own band, or accept that the
+blended number is a rough health check and nothing more.
+
 ### 8. Lead quality is plumbing. Confidence: HIGH
 Meta's own quality playbook: connect your CRM to instant forms so leads are retrieved immediately,
 because speed to lead dominates; send down-funnel outcomes back through the Conversions API so
