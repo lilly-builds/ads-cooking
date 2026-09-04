@@ -143,6 +143,50 @@ class TestThumbnailHash(CreativeOnDisk):
             image_hash({})
 
 
+class TestTheShippedLeadForm(unittest.TestCase):
+    """The example form is what people copy, so it has to model the rules.
+
+    api-notes.md documents two things Meta enforces on lead forms. Documenting
+    a rule while shipping an example that does not follow it is worse than not
+    documenting it.
+    """
+
+    def setUp(self):
+        self.form = CONFIG["lead_form"]
+
+    def test_it_includes_a_marketing_consent_box(self):
+        """Without one you cannot lawfully email or text the leads you collect."""
+        self.assertIn("custom_disclaimer", self.form)
+        self.assertTrue(self.form["custom_disclaimer"]["checkboxes"])
+
+    def test_the_consent_box_uses_the_keys_meta_accepts(self):
+        """Meta rejects {required, label}; it wants {key, text}."""
+        for box in self.form["custom_disclaimer"]["checkboxes"]:
+            self.assertEqual(set(box), {"key", "text"})
+
+    def test_the_consent_box_is_not_pre_checked(self):
+        """A pre-checked consent box is rejected outright."""
+        for box in self.form["custom_disclaimer"]["checkboxes"]:
+            self.assertNotIn("checked", box)
+            self.assertNotIn("is_checked", box)
+
+    def test_list_style_bullets_stay_under_the_character_limit(self):
+        card = self.form.get("context_card", {})
+        if card.get("style") == "LIST_STYLE":
+            for bullet in card["content"]:
+                self.assertLess(len(bullet), 80, f"Meta rejects this bullet: {bullet!r}")
+
+    def test_it_survives_being_encoded_for_the_wire(self):
+        """Nested form fields go through the same JSON encoding as everything else."""
+        import json as _json
+        from adscooking.graph import _encode_nested
+        encoded = _encode_nested({k: v for k, v in self.form.items() if not k.startswith("_")})
+        self.assertEqual(_json.loads(encoded["custom_disclaimer"])["checkboxes"][0]["key"],
+                         "marketing_consent")
+        # questions ships as a JSON string and must not be double-encoded
+        self.assertEqual(_json.loads(encoded["questions"])[0]["type"], "FULL_NAME")
+
+
 class TestPageToken(CreativeOnDisk):
     """The mistake that costs an afternoon the first time you publish."""
 

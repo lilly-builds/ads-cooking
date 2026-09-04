@@ -57,7 +57,7 @@ git clone https://github.com/lilly-builds/ads-cooking
 cd ads-cooking
 
 # 1. Tests. No dependencies, no network, no ad account.
-python3 -m unittest discover -s tests -t .        # expect: 96 tests, OK
+python3 -m unittest discover -s tests -t .        # expect: 101 tests, OK
 
 # 2. The full gate.
 ./scripts/check.sh                                 # expect: ALL CHECKS PASSED
@@ -195,4 +195,4 @@ being in trouble.
 | `adscooking/pulse.py` | The read-only monitor |
 | `skills/` | The Claude Code commands |
 | `context/` | Setup guide, API notes, and the research behind the thresholds |
-| `tests/` | 96 tests, including the in-memory Graph API |
+| `tests/` | 101 tests, including the in-memory Graph API |

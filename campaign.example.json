@@ -1,13 +1,11 @@
 {
   "_comment": "Copy this to your config folder as campaign.json and edit it. Settings live here as data so changing a campaign never means changing code.",
-
   "campaign": {
     "name": "Leads | Vertical video | Q1",
     "objective": "OUTCOME_LEADS",
     "buying_type": "AUCTION",
     "special_ad_categories": "[]"
   },
-
   "ad_set": {
     "name": "Leads | US | Instant form",
     "daily_budget_usd": 20,
@@ -16,16 +14,26 @@
     "_destination_type": "ON_AD sends people to an instant form. Use LEAD_FORM only if Meta tells you to.",
     "destination_type": "ON_AD",
     "targeting": {
-      "countries": ["US"],
+      "countries": [
+        "US"
+      ],
       "age_min": 30,
       "age_max": 45,
       "_placements": "Manual, Reels and Stories only. Feed crops a 9:16 video and buries the caption.",
-      "publisher_platforms": ["facebook", "instagram"],
-      "facebook_positions": ["facebook_reels", "story"],
-      "instagram_positions": ["reels", "story"]
+      "publisher_platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "facebook_positions": [
+        "facebook_reels",
+        "story"
+      ],
+      "instagram_positions": [
+        "reels",
+        "story"
+      ]
     }
   },
-
   "creative": {
     "creative_name": "Vertical video, multi-text v1",
     "_video": "Path relative to this config folder. 1080x1920 works everywhere Reels and Stories run.",
@@ -43,24 +51,46 @@
       "A second headline"
     ]
   },
-
   "ad": {
     "name": "Vertical video | Ad 1"
   },
-
   "lead_form": {
     "name": "Lead form v1",
     "_immutable": "Forms cannot be edited once published. Changing this and running `form` creates a NEW form and points the ad at it.",
     "locale": "en_US",
+    "_context_card": "The greeting screen before the questions. Optional, but it is where you restate the offer. LIST_STYLE bullets must each be under 80 characters or Meta rejects the form.",
+    "context_card": {
+      "title": "What you get",
+      "style": "LIST_STYLE",
+      "content": [
+        "A short benefit, under 80 characters.",
+        "A second one.",
+        "A third."
+      ],
+      "button_text": "Get started"
+    },
+    "questions": "[{\"type\":\"FULL_NAME\"},{\"type\":\"EMAIL\"},{\"type\":\"PHONE\"}]",
+    "_questions": "Fewer fields get more completions. Add only what you will actually use.",
     "privacy_policy": {
       "url": "https://example.com/privacy",
       "link_text": "Privacy Policy"
     },
-    "questions": "[{\"type\":\"FULL_NAME\"},{\"type\":\"EMAIL\"},{\"type\":\"PHONE\"}]",
-    "follow_up_action_url": "https://example.com/thanks",
-    "_consent": "Meta rejects a pre-checked consent box. It must default to unchecked."
+    "_custom_disclaimer": "Your marketing consent box. Needed before you email or text these leads. Two rules Meta enforces: checkboxes take {key, text}, NOT {required, label}, and the box must default to UNCHECKED. A pre-checked box is rejected.",
+    "custom_disclaimer": {
+      "title": "Staying in touch",
+      "body": {
+        "text": "Your Business will email and text you about this offer. You can opt out at any time."
+      },
+      "checkboxes": [
+        {
+          "key": "marketing_consent",
+          "text": "Yes, send me emails and texts about this. I can opt out anytime."
+        }
+      ]
+    },
+    "_thank_you": "The screen after they submit, and where you send them next.",
+    "follow_up_action_url": "https://example.com/thanks"
   },
-
   "live": {
     "_comment": "Filled in from what `publish --go` prints. `copy`, `form` and `pulse` read these.",
     "campaign_id": "",
@@ -70,13 +100,15 @@
     "thumbnail_hash": "",
     "form_id": ""
   },
-
   "monitor": {
     "_comment": "Thresholds for `pulse`. See context/ad-management-principles.md for where each number comes from and how much to trust it.",
     "no_edit_window_until": "",
     "benchmarks": {
       "_source": "Replace with medians for YOUR vertical. The defaults below are US lead-objective figures and are a starting point, not a target.",
-      "cpl_band_usd": [25, 35],
+      "cpl_band_usd": [
+        25,
+        35
+      ],
       "ctr_median_pct": 1.86,
       "cpc_median_usd": 1.65
     },
