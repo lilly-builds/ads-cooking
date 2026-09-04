@@ -13,7 +13,9 @@ Built for people who can follow instructions but do not want to learn the Meta M
 /plugin install ads-cooking@ads-cooking
 ```
 
-That's it. No pip install. No virtualenv. No packages to download. If your computer has Python, you're done.
+That's it. No pip install. No virtualenv. No packages to download.
+
+You need Python 3.10 or newer. Most Macs have it. To check, open Terminal and type `python3 --version`. If it says something older, or pops up a box asking to install developer tools, say yes to the box, or grab a current Python from [python.org](https://www.python.org/downloads/). The setup command checks this for you and tells you the same thing.
 
 ## Start here
 
@@ -32,6 +34,8 @@ Then tell it about your ads in plain English. Something like:
 Claude takes it from there. It figures out where you are, sets up your account connection, and walks you through the parts only you can do. It stops and asks before anything spends money.
 
 First time, it will hand you a few jobs in the Meta dashboard. Accepting Meta's terms. Making the login key. Flipping your app to Live. Turning the ads on at the end. Claude gives you the exact link and the exact buttons for each one. It cannot do these for you, and it should not.
+
+It asks for one number before the rest: your Business Portfolio ID. Nearly every link after that is built around it, so with it in hand each step is a link that lands on the right screen, instead of "go find this somewhere in Business Settings." That is where the setup time normally goes.
 
 ## The seven commands
 
@@ -72,7 +76,9 @@ Check these before you run it for real:
 
 **It never guesses which account you meant.** If your setup is missing something, it stops before it talks to Meta. It will not fall back to some other account ID.
 
-**Your login key stays hidden.** Never printed. Never pasted into chat. Never in a file you'd share by accident.
+**Your login key stays hidden.** Never printed. Never pasted into chat. Never in a file you'd share by accident. Setup locks the file to your account only and actually runs the check that git is ignoring it, rather than trusting that somebody remembered to.
+
+**You get told when the key dies.** Setup prints the expiry date so you can write it down, and the morning check warns you 14 days out. A key that quietly expires means your ads keep running while every command here stops, which is a bad month to find out about late.
 
 ## Four things Meta will not tell you
 
@@ -107,7 +113,7 @@ Clone it and run the tests. No account needed, no internet needed.
 ```bash
 git clone https://github.com/lilly-builds/ads-cooking
 cd ads-cooking
-python3 -m unittest discover -s tests -t .      # 101 tests
+python3 -m unittest discover -s tests -t .      # 130 tests
 ./scripts/check.sh                              # the full gate
 ```
 
@@ -126,7 +132,7 @@ Every command is a folder in `skills/`. The folder name is the command name.
 | Command | Lives in | Runs |
 |---|---|---|
 | `/ads-cooking:start` | `skills/start/` | nothing itself, it just points you at the right one |
-| `/ads-cooking:connect` | `skills/connect/` | walks you through Meta, then `check` |
+| `/ads-cooking:connect` | `skills/connect/` | `adscooking/setup.py`, then `check` |
 | `/ads-cooking:check` | `skills/check/` | `adscooking/check.py` |
 | `/ads-cooking:publish` | `skills/publish/` | `adscooking/publish.py` |
 | `/ads-cooking:copy` | `skills/copy/` | `adscooking/update.py` |
@@ -139,6 +145,7 @@ The code itself:
 |---|---|
 | `adscooking/graph.py` | The only file that talks to Meta. Everything goes through here. |
 | `adscooking/config.py` | Reads your settings and your key. Refuses to guess if something's missing. |
+| `adscooking/setup.py` | First-run setup: Python check, config folder, git check, Meta's links |
 | `adscooking/publish.py` | Builds the campaign, seven steps, dry run and resume |
 | `adscooking/update.py` | Changes copy or the lead form on a live ad |
 | `adscooking/pulse.py` | The morning check. Reads only. |
@@ -150,7 +157,7 @@ And the rest:
 | Folder | What's in it |
 |---|---|
 | `context/` | Setup guide, Meta's gotchas, the research behind the numbers |
-| `tests/` | 101 tests across 6 files, plus the pretend Meta they run against |
+| `tests/` | 130 tests across 7 files, plus the pretend Meta they run against |
 | `scripts/` | `check.sh` runs everything before you push. `check_docs.py` catches docs that drift from the code. |
 | `.claude-plugin/` | The two files that make this installable |
 

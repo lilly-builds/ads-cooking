@@ -161,19 +161,29 @@ class TestTheShippedExample(unittest.TestCase):
 
     def test_the_scopes_it_lists_match_the_setup_guide(self):
         """Three files told a user three different scope lists. A token missing
-        one works until it suddenly does not."""
+        one works until it suddenly does not.
+
+        `adscooking/setup.py` is the authority now, because it is what prints the
+        list during setup. A file naming no scopes is fine: it defers to the
+        command. A file naming some of them has to name all seven, which is the
+        drift this catches.
+        """
         import re
+        from adscooking.setup import SCOPES
         root = Path(__file__).parent.parent
-        pattern = re.compile(r"\b(ads_management|ads_read|business_management|leads_retrieval|"
-                             r"pages_show_list|pages_read_engagement|pages_manage_ads)\b")
+        pattern = re.compile(r"\b(" + "|".join(SCOPES) + r")\b")
         sources = {
+            "adscooking/setup.py": (root / "adscooking" / "setup.py").read_text(),
             ".env.example": self.example,
             "connecting-your-account.md": (root / "context" / "connecting-your-account.md").read_text(),
             "connect/SKILL.md": (root / "skills" / "connect" / "SKILL.md").read_text(),
         }
         found = {name: set(pattern.findall(text)) for name, text in sources.items()}
-        self.assertEqual(len(set(map(frozenset, found.values()))), 1,
-                         f"scope lists disagree: { {k: sorted(v) for k, v in found.items()} }")
+        self.assertEqual(found["adscooking/setup.py"], set(SCOPES))
+        partial = {name: sorted(scopes) for name, scopes in found.items()
+                   if scopes and scopes != set(SCOPES)}
+        self.assertEqual(partial, {},
+                         f"these name only some of the seven scopes: {partial}")
 
 
 if __name__ == "__main__":

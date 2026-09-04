@@ -3,14 +3,27 @@
 Four reads, in the order things actually break. Run this first whenever
 something stops working: it tells you which of the four links in the chain is
 the broken one, which is faster than reading a publish error and guessing.
+
+It also prints the token's expiry date. `pulse` warns 14 days out, but `pulse`
+only warns on a token that still works: once it has expired, the warning that
+would have prevented it is exactly what stops running. Saying the date here, at
+setup, is what gives someone the chance to write it down.
 """
 
 from __future__ import annotations
 
 from .graph import GraphError
+from .pulse import token_expiry_date, token_days_left
+
+# A dead token is a setup problem, not a campaign problem, and the two must not
+# be reported the same way. Anything polling this has to be able to tell "your
+# key needs regenerating" apart from "your ads are in trouble".
+OK = 0
+CAMPAIGN_PROBLEM = 1
+SETUP_PROBLEM = 3
 
 
-def run_check(api, env: dict) -> bool:
+def run_check(api, env: dict) -> int:
     account, page = env["META_AD_ACCOUNT_ID"], env["META_PAGE_ID"]
     account_states = {1: "active", 2: "disabled", 3: "unsettled", 7: "pending review",
                       8: "pending closure", 9: "in grace period", 101: "closed"}
@@ -23,7 +36,22 @@ def run_check(api, env: dict) -> bool:
         print(f"  Token works. System user: {me.get('name')}")
     except GraphError as exc:
         print(f"  Token failed: {exc.message}\n\n  {exc.explain()}")
-        return False
+        return SETUP_PROBLEM
+
+    # Best effort. A token that works but whose expiry cannot be read is still a
+    # working token, and losing this line must not fail the check.
+    try:
+        payload = api.debug_self()
+        days = token_days_left(payload)
+        on = token_expiry_date(payload)
+        if days is None:
+            print("     It does not expire. Nothing to diary, but it stays a live key to "
+                  "this ad account until somebody revokes it.")
+        else:
+            print(f"     It expires in {days} days, on {on}. Write that date down: when it "
+                  f"passes, the ads keep running and every command here stops.")
+    except Exception:
+        print("     Could not read its expiry date. Check it by hand in Business Settings.")
 
     try:
         data = api.get(account, fields="name,account_status,currency,timezone_name,amount_spent")
@@ -57,4 +85,4 @@ def run_check(api, env: dict) -> bool:
 
     print("\n" + ("Everything checks out. You can publish." if ok
                   else "Something above needs fixing before you publish."))
-    return ok
+    return OK if ok else CAMPAIGN_PROBLEM
