@@ -123,7 +123,7 @@ would silently delete your token.
 python3 -m unittest discover -s tests -t .
 ```
 
-91 tests, no dependencies, no network, no ad account needed. `tests/fake_graph.py` is an in-memory
+96 tests, no dependencies, no network, no ad account needed. `tests/fake_graph.py` is an in-memory
 Graph API that records every call, so the tests assert on the exact payloads that would go to Meta.
 It refuses writes when asked to, which is what makes the read-only guarantee testable rather than
 aspirational.
@@ -151,7 +151,7 @@ Four bugs were found by the tests and by review rather than by running the code:
 | `adscooking/pulse.py` | The read-only monitor. `evaluate()` is pure, so it is easy to test. |
 | `skills/` | The Claude Code commands |
 | `context/` | The setup guide, the API notes, the research behind the thresholds |
-| `tests/` | 91 tests including `fake_graph.py` |
+| `tests/` | 96 tests including `fake_graph.py` |
 
 ## Honest limits
 

@@ -119,5 +119,62 @@ class TestConfigLocation(unittest.TestCase):
         self.assertEqual(config.config_dir(empty), Path.home() / ".ads-cooking")
 
 
+class TestTheShippedExample(unittest.TestCase):
+    """.env.example is the setup instructions. It has to match the code.
+
+    Adding a required variable and forgetting the example is the kind of drift
+    nobody notices until someone new tries to set the thing up.
+    """
+
+    def setUp(self):
+        self.example = (Path(__file__).parent.parent / ".env.example").read_text()
+
+    def test_it_lists_every_required_variable(self):
+        from adscooking.config import REQUIRED_ENV
+        for key in REQUIRED_ENV:
+            self.assertIn(f"{key}=", self.example, f"{key} is required but not in .env.example")
+
+    def test_it_lists_no_variable_the_code_ignores(self):
+        import re
+        declared = set(re.findall(r"^([A-Z][A-Z0-9_]+)=", self.example, re.M))
+        from adscooking.config import REQUIRED_ENV
+        self.assertEqual(declared, set(REQUIRED_ENV),
+                         "the example and the code disagree about which variables exist")
+
+    def test_it_ships_with_no_values_filled_in(self):
+        """A committed example with a real value in it is a leaked credential."""
+        import re
+        for key, value in re.findall(r"^([A-Z][A-Z0-9_]+)=(.*)$", self.example, re.M):
+            self.assertEqual(value.strip(), "", f"{key} has a value in the committed example")
+
+    def test_copying_it_unfilled_gives_a_useful_error(self):
+        """The real first-run path: copy the example, run something, read the error."""
+        from adscooking.config import ConfigError, require_env
+        directory = Path(tempfile.mkdtemp())
+        (directory / ".env").write_text(self.example)
+        with self.assertRaises(ConfigError) as caught:
+            require_env(directory)
+        message = str(caught.exception)
+        for key in ("META_SYSTEM_USER_TOKEN", "META_AD_ACCOUNT_ID", "META_PAGE_ID"):
+            self.assertIn(key, message, "the error should name every variable still to fill in")
+        self.assertIn("Nothing was sent to Meta", message)
+
+    def test_the_scopes_it_lists_match_the_setup_guide(self):
+        """Three files told a user three different scope lists. A token missing
+        one works until it suddenly does not."""
+        import re
+        root = Path(__file__).parent.parent
+        pattern = re.compile(r"\b(ads_management|ads_read|business_management|leads_retrieval|"
+                             r"pages_show_list|pages_read_engagement|pages_manage_ads)\b")
+        sources = {
+            ".env.example": self.example,
+            "connecting-your-account.md": (root / "context" / "connecting-your-account.md").read_text(),
+            "connect/SKILL.md": (root / "skills" / "connect" / "SKILL.md").read_text(),
+        }
+        found = {name: set(pattern.findall(text)) for name, text in sources.items()}
+        self.assertEqual(len(set(map(frozenset, found.values()))), 1,
+                         f"scope lists disagree: { {k: sorted(v) for k, v in found.items()} }")
+
+
 if __name__ == "__main__":
     unittest.main()

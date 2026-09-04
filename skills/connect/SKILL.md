@@ -21,8 +21,11 @@ Settings, and it is easy to get lost.
 3. Assign the ad account, the page and the app to that system user. **Assigning the ad account
    is not enough**: lead forms live on the page, so the page needs assigning too, with MANAGE
    or ADVERTISE.
-4. Generate the token with `ads_management`, `leads_retrieval`, `pages_show_list` and
-   `pages_manage_ads`.
+4. Generate the token with all seven scopes: `ads_management`, `ads_read`,
+   `business_management`, `leads_retrieval`, `pages_show_list`, `pages_read_engagement`
+   and `pages_manage_ads`. A token missing any of them works until it suddenly does not:
+   insights need `ads_read`, and the page token lead forms depend on needs
+   `pages_read_engagement`.
 5. Set up the config folder (below).
 6. Run `/ads-cooking:check` and do not stop until it is clean.
 
