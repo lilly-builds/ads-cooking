@@ -43,6 +43,35 @@ for path in (pathlib.Path(p) for p in ("README.md", "AGENTS.md", "CLAUDE.md", "C
 for command in sorted(promised - {s.name for s in skills}):
     problems.append(f"docs promise /ads-cooking:{command} but there is no such skill")
 
+# The layout tables go stale the moment a file is added or renamed. Every
+# shipped module and every skill has to appear in README.md by name.
+readme_text = pathlib.Path("README.md").read_text()
+for module in sorted(pathlib.Path("adscooking").glob("*.py")):
+    if module.name == "__init__.py":
+        continue
+    if f"adscooking/{module.name}" not in readme_text:
+        problems.append(f"adscooking/{module.name} exists but README.md never mentions it")
+for helper in sorted(pathlib.Path("scripts").iterdir()):
+    if helper.name not in readme_text:
+        problems.append(f"scripts/{helper.name} exists but README.md never mentions it")
+
+# And a path the README names must exist.
+for reference in sorted(set(re.findall(
+        r'`((?:adscooking|skills|context|tests|scripts)/[A-Za-z0-9_./-]+)`', readme_text))):
+    if not pathlib.Path(reference).exists():
+        problems.append(f"README.md names {reference}, which does not exist")
+
+# The test count in the docs has to be the real one.
+import subprocess
+result = subprocess.run([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-t", "."],
+                        capture_output=True, text=True)
+actual = re.search(r"Ran (\d+) tests", result.stderr)
+if actual:
+    for doc in ("README.md", "AGENTS.md", "CODEX.md"):
+        for claimed in set(re.findall(r"(\d+) tests", pathlib.Path(doc).read_text())):
+            if claimed != actual.group(1):
+                problems.append(f"{doc} says {claimed} tests; there are {actual.group(1)}")
+
 for problem in problems:
     print(f"   FAIL {problem}")
 if not problems:

@@ -1,45 +1,56 @@
-# Meta Ads Kit
+# ads-cooking
 
-Run a Meta lead-generation campaign from Claude Code, or from a terminal. Connect an ad account,
-publish a campaign, change live ad copy and lead forms, and check spend and cost per lead every
-morning.
+Run your Meta ads by talking to Claude Code.
 
-**No dependencies.** Python standard library only, tests included. If you have `python3`, you have
-everything.
+You say what you want. Claude builds the campaign, writes the lead form, and checks how it's doing every morning. You approve everything before a dollar moves.
+
+Built for people who can follow instructions but do not want to learn the Meta Marketing API.
+
+## Install
 
 ```
 /plugin marketplace add lilly-builds/ads-cooking
 /plugin install ads-cooking@ads-cooking
 ```
 
-Commands are namespaced by the plugin, so they are `/ads-cooking:check`, `/ads-cooking:publish` and so
-on. `/ads-cooking:start` is the front door if you are not sure which you want.
+That's it. No pip install. No virtualenv. No packages to download. If your computer has Python, you're done.
 
-## The commands
+## Start here
 
-| Command | What it does | Can it spend money? |
-|---|---|---|
-| `/ads-cooking:start` | Works out where you are and routes to the right one | No |
-| `/ads-cooking:connect` | Connect an ad account, ending with a working token | No |
-| `/ads-cooking:check` | Prove the token reaches the account, page and forms | No |
-| `/ads-cooking:publish` | Create the campaign | Only with `--go`, and it lands paused |
-| `/ads-cooking:copy` | Change the wording on a live ad | Changes a live ad with `--go` |
-| `/ads-cooking:form` | Change the lead form questions | Changes a live ad with `--go` |
-| `/ads-cooking:pulse` | Spend, leads, cost per lead, and edit detection | No, never |
+Open Claude Code in any folder and type:
 
-Everything runs the same way, from any folder:
-
-```bash
-PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking <command>
+```
+/ads-cooking:start
 ```
 
-## Why it is built the way it is
+Then tell it about your ads in plain English. Something like:
 
-This code can spend someone's advertising budget. Most of the design follows from that.
+> I sell a $2,000 home organizing course. I want leads from women 30 to 45 in the US.
+> Budget is $20 a day. I have a vertical video ready. Here's my sales page: example.com
 
-**Dry run is the default.** `publish`, `copy` and `form` create nothing without `--go`. A dry run
-prints the budget, the audience, the placements and where leads land, so there is something real to
-check before money is involved:
+Claude takes it from there. It figures out where you are, sets up your account connection, and walks you through the parts only you can do. It stops and asks before anything spends money.
+
+First time, it will hand you a few jobs in the Meta dashboard. Accepting Meta's terms. Making the login key. Flipping your app to Live. Turning the ads on at the end. Claude gives you the exact link and the exact buttons for each one. It cannot do these for you, and it should not.
+
+## The seven commands
+
+| Type this | What happens |
+|---|---|
+| `/ads-cooking:start` | Not sure where to begin? Start here. It figures it out. |
+| `/ads-cooking:connect` | Hooks up your Meta account. Once, at the beginning. |
+| `/ads-cooking:check` | Is everything still connected? Run this when something feels off. |
+| `/ads-cooking:publish` | Builds the campaign. Shows you first. Creates nothing until you say go. |
+| `/ads-cooking:copy` | Change the words on a running ad. |
+| `/ads-cooking:form` | Change what the form asks people. |
+| `/ads-cooking:pulse` | How much did I spend? How many leads? What did each one cost? |
+
+Most days you only need `pulse`.
+
+## Your money is safe here
+
+This tool can spend your ad budget. So it is built to make that hard to do by accident.
+
+**Nothing happens until you say go.** Run `publish` and it shows you what it would do. It sends nothing. You read it, then you decide.
 
 ```
 Check these before you run it for real:
@@ -54,146 +65,105 @@ Check these before you run it for real:
   policy. Meta will reject the form. Set a real URL first.
 ```
 
-**Everything is created paused.** Publishing and going live are separate decisions. The second one
-is made by a person looking at the ad preview in Ads Manager. The code has no path to setting
-anything active, and a test asserts it.
+**Every ad starts paused.** Even after you say go. Nothing runs until you open Meta, look at your ad, and turn it on yourself. There is no code in here that can turn an ad on. A test checks for that.
 
-**The monitor cannot write.** `pulse` only ever calls `get`. The thing watching the spend should not
-also be able to change it, and `test_pulse_never_writes` enforces that by handing it a client that
-raises on any write.
+**The morning check can only look.** It reads your numbers. It cannot change your budget, your ad, or your targeting. There is no code in it that writes to Meta at all.
 
-**Nothing is ever assumed.** There is no fallback ad account id anywhere. A missing value stops the
-command before it reaches Meta, rather than falling back to whatever was baked in as a default. A
-test greps the package to keep it that way.
+**It never guesses which account you meant.** If your setup is missing something, it stops before it talks to Meta. It will not fall back to some other account ID.
 
-**The token is never printed.** It is not exposed on the client object and not in its `repr`, so a
-stray traceback cannot leak it.
+**Your login key stays hidden.** Never printed. Never pasted into chat. Never in a file you'd share by accident.
 
-## What Meta will not tell you
+## Four things Meta will not tell you
 
-Four constraints shape the whole design. Full detail with the error messages is in
-[`context/api-notes.md`](context/api-notes.md).
+These cost real hours to find out.
 
-**Lead forms cannot be edited.** Once published, frozen. Changing one question means a new form, a
-new creative pointing at it, and a swap onto the ad. One change, three API calls.
+**You cannot edit a lead form.** Once it's live, it's frozen. Changing one question means making a whole new form and pointing your ad at it. Three steps for what feels like one. `/ads-cooking:form` does all three.
 
-**Ad creatives cannot be edited either.** A copy change is a new creative and a swap. The ad keeps
-its id, which is what preserves its delivery history.
+**You cannot edit an ad's creative either.** Same deal. Changing a headline means a new creative and a swap. Your ad keeps its ID though, so it keeps everything Meta learned about who clicks it.
 
-**Lead forms need a page token, not the system-user token.** Publishing works perfectly until step
-five and then fails with a permission error that never mentions page tokens.
+**Lead forms need a different key than the rest.** Your setup works perfectly, right up until the form step, then fails with an error that never mentions why.
 
-**A blanket error code 1 on every call means Meta is down.** Not your account, not your token. Wait
-and re-run. Rebuilding during an outage turns a 30-minute wait into a day of cleanup.
+**When every call fails at once, Meta is down.** Not you. Not your key. Wait an hour. People rebuild their whole campaign during a Meta outage and turn a coffee break into a lost day.
 
-## The thresholds are researched, and the gaps are marked
+The full list, with the exact error text and the fix, is in [`context/api-notes.md`](context/api-notes.md).
 
-[`context/ad-management-principles.md`](context/ad-management-principles.md) is where the numbers in
-`campaign.json` come from. Eight rules, each with a confidence rating, from a research pass that put
-25 claims through adversarial verification: 17 survived and 8 were refuted.
+## Where the numbers come from
 
-It also has two sections most guidance leaves out:
+`/ads-cooking:pulse` tells you if $40 a lead is bad. That answer came from research, not a guess.
 
-- **Refuted lore** lists popular advice that failed verification, including "never edit a working ad
-  set" and "adding a new ad always resets learning".
-- **Unanchored zones** lists what could not be verified at all: hook rate thresholds, kill rules,
-  Advantage+ versus manual for narrow demographics. The monitor records frequency and CPM and
-  applies no threshold to either. Inventing a threshold and presenting it as a rule is worse than
-  admitting there isn't one.
+[`context/ad-management-principles.md`](context/ad-management-principles.md) has eight rules, each marked by how much you should trust it. It came from checking 25 popular claims. Seventeen held up. Eight did not.
 
-## Setup
+It also has two lists most ad advice skips.
 
-### If you installed the plugin
+One is advice that failed the check. "Never edit a working ad set" is in there. So is "adding a new ad always resets learning."
 
-Run `/ads-cooking:connect`. It creates the config folder, walks the Meta Business Settings side
-(the fiddly part), and stops at the four things only you can do: accepting Meta's terms,
-generating the token, taking the app out of Development mode, and turning the ads on.
+The other is questions nobody could answer. Hook rate thresholds. Kill rules. Advantage+ versus doing it yourself. The morning check records those numbers and refuses to judge them, because making up a rule and calling it research is worse than saying you don't know.
 
-It ends by running `/ads-cooking:check`, which proves the token reaches your ad account, your
-Page and your lead forms before you try to publish anything.
+## If you want to look under the hood
 
-### If you cloned the repo
+Clone it and run the tests. No account needed, no internet needed.
 
 ```bash
 git clone https://github.com/lilly-builds/ads-cooking
 cd ads-cooking
-python3 -m unittest discover -s tests -t .      # 101 tests, no network, no ad account
+python3 -m unittest discover -s tests -t .      # 101 tests
 ./scripts/check.sh                              # the full gate
 ```
 
-To point a clone at a real account, put the config somewhere outside the checkout:
+`tests/fake_graph.py` is a pretend Meta that records every call. So the tests can check exactly what would get sent, without an ad account and without spending anything.
 
-```bash
-mkdir -p ~/.ads-cooking
-cp .env.example ~/.ads-cooking/.env             # then fill in the three values
-cp campaign.example.json ~/.ads-cooking/campaign.json
-PYTHONPATH=. python3 -m adscooking check
-```
+Four bugs showed up this way instead of on somebody's live campaign:
 
-### Where config lives
+Nested fields were being sent in Python's format instead of the one Meta reads, so every write would have bounced. Budgets lost a cent to rounding. The thumbnail was read from a spot Meta doesn't put it, and quietly came back empty, which would have built an ad with no picture. And three fields Meta demands but never asks for clearly were missing.
 
-Checked in this order:
+Each fix was checked by putting the bug back and making sure the tests screamed.
 
-| Location | When to use it |
+## Where things live
+
+Every command is a folder in `skills/`. The folder name is the command name.
+
+| Command | Lives in | Runs |
+|---|---|---|
+| `/ads-cooking:start` | `skills/start/` | nothing itself, it just points you at the right one |
+| `/ads-cooking:connect` | `skills/connect/` | walks you through Meta, then `check` |
+| `/ads-cooking:check` | `skills/check/` | `adscooking/check.py` |
+| `/ads-cooking:publish` | `skills/publish/` | `adscooking/publish.py` |
+| `/ads-cooking:copy` | `skills/copy/` | `adscooking/update.py` |
+| `/ads-cooking:form` | `skills/form/` | `adscooking/update.py` |
+| `/ads-cooking:pulse` | `skills/pulse/` | `adscooking/pulse.py` |
+
+The code itself:
+
+| File | What it does |
 |---|---|
-| `$ADS_COOKING_HOME` | You want it somewhere specific |
-| `./ads-cooking/` | Per-project, sitting next to the campaign it belongs to |
-| `~/.ads-cooking/` | One account, used from anywhere. The fallback if neither above applies. |
+| `adscooking/graph.py` | The only file that talks to Meta. Everything goes through here. |
+| `adscooking/config.py` | Reads your settings and your key. Refuses to guess if something's missing. |
+| `adscooking/publish.py` | Builds the campaign, seven steps, dry run and resume |
+| `adscooking/update.py` | Changes copy or the lead form on a live ad |
+| `adscooking/pulse.py` | The morning check. Reads only. |
+| `adscooking/check.py` | Tests your connection in the order things break |
+| `adscooking/__main__.py` | The command line: `python3 -m adscooking <command>` |
 
-A folder only counts if it actually contains a `.env` or a `campaign.json`, so a clone of this
-repo is never mistaken for someone's config.
+And the rest:
 
-Config never goes inside the plugin. A plugin directory is replaced wholesale on update, which
-would silently delete your token.
-
-## Tests
-
-```bash
-python3 -m unittest discover -s tests -t .
-```
-
-101 tests, no dependencies, no network, no ad account needed. `tests/fake_graph.py` is an in-memory
-Graph API that records every call, so the tests assert on the exact payloads that would go to Meta.
-It refuses writes when asked to, which is what makes the read-only guarantee testable rather than
-aspirational.
-
-Four bugs were found by the tests and by review rather than by running the code:
-
-- Nested fields were being form-encoded as Python's `repr`, so `targeting` went out with single
-  quotes instead of JSON and Meta would have rejected every write. Now handled once, in the client,
-  rather than at each call site where it can be forgotten.
-- `float(20.005) * 100` is `2000.4999...`, which rounds budgets to the wrong cent. Now `Decimal`.
-- The thumbnail hash was read from the top level of the `/adimages` response, where it does not
-  exist, and defaulted to `""`, so a creative would have been built with no image. It now reads
-  the real nested shape and raises if it is missing.
-- Three fields Meta requires but does not clearly ask for were missing, so a first publish would
-  have hit errors that had already been solved once.
-
-## Layout
-
-| Path | What |
+| Folder | What's in it |
 |---|---|
-| `adscooking/graph.py` | The only module that talks to Meta. Error classification lives here. |
-| `adscooking/config.py` | Loading credentials and settings, and refusing to guess |
-| `adscooking/publish.py` | The seven publish steps, dry run and resume |
-| `adscooking/update.py` | Copy and lead form changes, both create-and-swap |
-| `adscooking/pulse.py` | The read-only monitor. `evaluate()` is pure, so it is easy to test. |
-| `skills/` | The Claude Code commands |
-| `context/` | The setup guide, the API notes, the research behind the thresholds |
-| `tests/` | 101 tests including `fake_graph.py` |
+| `context/` | Setup guide, Meta's gotchas, the research behind the numbers |
+| `tests/` | 101 tests across 6 files, plus the pretend Meta they run against |
+| `scripts/` | `check.sh` runs everything before you push. `check_docs.py` catches docs that drift from the code. |
+| `.claude-plugin/` | The two files that make this installable |
 
-## Honest limits
+Your settings and your login key live in `ads-cooking/` in your project, or `~/.ads-cooking/`, or wherever `$ADS_COOKING_HOME` says. Never inside the plugin, because plugins get replaced when they update and that would wipe your key.
 
-- **Verified against one ad account.** The payload construction is covered by tests, and the
-  workflows have run against a real live campaign. But "clone this and it works on your account"
-  has not been proven across several accounts, and Meta's behaviour varies by account age, spend
-  history and region.
-- **Lead-objective campaigns with instant forms and a vertical video.** Other objectives and
-  formats are not wired up.
-- **The benchmark band ships as US lead-objective medians.** They are a starting point for a small
-  budget, not a target, and you should replace them with your own vertical's numbers.
-- **Pinned to Graph API v21.0.** Meta auto-upgrades old versions, which can change behaviour without
-  warning. Bump it deliberately and run the tests first.
+## What this does not do yet
+
+It has run against one ad account. The tests cover what gets sent to Meta, and it has worked on a live campaign. But "clone this and it works on your account" is not proven across many accounts, and Meta behaves differently depending on account age, spend history, and country.
+
+It handles lead campaigns with instant forms and a vertical video. Other campaign types are not wired up.
+
+The cost-per-lead range it ships with is a US average. Use it as a starting point, then swap in numbers from your own industry.
+
+It's pinned to version 21 of Meta's API. Meta upgrades old versions on its own, which can change behavior without telling you. Bump it on purpose and run the tests first.
 
 ## Licence
 
