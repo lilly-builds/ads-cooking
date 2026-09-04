@@ -12,6 +12,14 @@ you even if you read nothing else.
 3. **Never ask for the token in chat**, and never print or echo `.env`.
 4. **Never make `pulse` write.** It reads only.
 
+## When Meta changes
+
+The integration was last reviewed on 4 September 2026 and is pinned to Graph API `v21.0`. Read the
+**“When Meta changes something”** section in [AGENTS.md](AGENTS.md) before responding to a Meta
+error, deprecation, or changed dashboard path. Diagnose and repair with official Meta sources and
+a test account; never "self-heal" by changing a live campaign, using `--go`, or setting anything
+ACTIVE without the user's explicit request in that turn.
+
 ## Running the commands
 
 There is no plugin root here, so use the repo:

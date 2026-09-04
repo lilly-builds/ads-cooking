@@ -230,6 +230,29 @@ and re-running `publish` will build a second campaign rather than resuming the f
 - **Run `./scripts/check.sh` before pushing.** Tests, JSON, manifest, skill frontmatter, command
   form, links, secrets, and the identifying-data denylist.
 
+## When Meta changes something
+
+This integration was last reviewed on **4 September 2026** and is deliberately pinned to Graph API
+`v21.0`. Meta can change the API, permissions, dashboard paths, and validation rules after that
+date. Treat a Meta error or a user report as a signal to investigate; do not assume the existing
+implementation is still correct.
+
+Be self-repairing in diagnosis, **not** in live advertising actions:
+
+1. Reproduce safely with a dry run or a Meta test account. Never use `--go`, change a live ad, or
+   set anything ACTIVE while investigating unless the user explicitly asks in that turn.
+2. Check the current official Meta documentation and changelog before changing code or setup
+   instructions. Do not repair a Meta integration from memory or from an unverified blog post.
+3. Identify the smallest root-cause fix, then update the code, tests, and affected documentation
+   together. If the API pin changes, update `DEFAULT_VERSION` and the version notes at the same
+   time.
+4. Run `./scripts/check.sh`, then exercise the complete connection, publish, copy, form, and pulse
+   paths against a Meta test account. Local fake-API tests prove payload construction only; they do
+   not prove Meta still accepts it.
+5. If a test account is unavailable, say the change is **implemented, not fully tested**. Record
+   the exact Meta error, the source consulted, what was changed, and the test-account verification
+   still required. Do not describe it as self-healed or production verified.
+
 ## Exit codes
 
 | Code | Means |
