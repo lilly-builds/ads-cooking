@@ -103,18 +103,47 @@ It also has two sections most guidance leaves out:
 
 ## Setup
 
+### If you installed the plugin
+
+Run `/ads-cooking:connect`. It creates the config folder, walks the Meta Business Settings side
+(the fiddly part), and stops at the four things only you can do: accepting Meta's terms,
+generating the token, taking the app out of Development mode, and turning the ads on.
+
+It ends by running `/ads-cooking:check`, which proves the token reaches your ad account, your
+Page and your lead forms before you try to publish anything.
+
+### If you cloned the repo
+
 ```bash
-mkdir -p ads-cooking
-cp .env.example ads-cooking/.env            # then fill in three values
-cp campaign.example.json ads-cooking/campaign.json
+git clone https://github.com/lilly-builds/ads-cooking
+cd ads-cooking
+python3 -m unittest discover -s tests -t .      # 101 tests, no network, no ad account
+./scripts/check.sh                              # the full gate
+```
+
+To point a clone at a real account, put the config somewhere outside the checkout:
+
+```bash
+mkdir -p ~/.ads-cooking
+cp .env.example ~/.ads-cooking/.env             # then fill in the three values
+cp campaign.example.json ~/.ads-cooking/campaign.json
 PYTHONPATH=. python3 -m adscooking check
 ```
 
-`/ads-cooking:connect` walks the Business Settings side of this, which is the fiddly part:
-[`context/connecting-your-account.md`](context/connecting-your-account.md).
+### Where config lives
 
-Config lives in `ads-cooking/` in your project, or `~/.ads-cooking/`, or wherever `$ADS_COOKING_HOME` points.
-Deliberately never inside the plugin, because a plugin directory is replaced on update and that
+Checked in this order:
+
+| Location | When to use it |
+|---|---|
+| `$ADS_COOKING_HOME` | You want it somewhere specific |
+| `./ads-cooking/` | Per-project, sitting next to the campaign it belongs to |
+| `~/.ads-cooking/` | One account, used from anywhere. The fallback if neither above applies. |
+
+A folder only counts if it actually contains a `.env` or a `campaign.json`, so a clone of this
+repo is never mistaken for someone's config.
+
+Config never goes inside the plugin. A plugin directory is replaced wholesale on update, which
 would silently delete your token.
 
 ## Tests

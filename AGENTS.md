@@ -62,14 +62,19 @@ python3 -m unittest discover -s tests -t .        # expect: 101 tests, OK
 # 2. The full gate.
 ./scripts/check.sh                                 # expect: ALL CHECKS PASSED
 
-# 3. A config folder for the user to fill in.
+# 3. A config folder for the user to fill in. Put it in THEIR project, not in a
+#    clone of this repo: the repo is also called ads-cooking, and nesting
+#    ads-cooking/ads-cooking/ confuses everyone including you.
 mkdir -p ads-cooking
-cp .env.example ads-cooking/.env
-cp campaign.example.json ads-cooking/campaign.json
+cp "${CLAUDE_PLUGIN_ROOT}/.env.example" ads-cooking/.env
+cp "${CLAUDE_PLUGIN_ROOT}/campaign.example.json" ads-cooking/campaign.json
 
 # 4. Confirm it is ignored by git before anything else happens.
 git check-ignore ads-cooking/.env                     # expect: ads-cooking/.env
 ```
+
+If their project has no .gitignore, or does not cover it, add `ads-cooking/` before you go any
+further. A token in someone's git history is the one mistake here you cannot take back.
 
 Requires Python 3.10 or newer. Nothing else: no pip install, no virtualenv, no lockfile.
 
@@ -111,7 +116,8 @@ Then have them fill in the other two values in `ads-cooking/.env`:
 Verify before moving on:
 
 ```bash
-PYTHONPATH="$(pwd)" python3 -m adscooking check
+PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking check   # installed as a plugin
+PYTHONPATH="$(pwd)" python3 -m adscooking check                  # working in a clone
 ```
 
 Exit 0 means done. If lead forms fail while everything else passes, the system user has the ad
