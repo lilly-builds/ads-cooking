@@ -1,0 +1,93 @@
+{
+  "_comment": "Copy this to your config folder as campaign.json and edit it. Settings live here as data so changing a campaign never means changing code.",
+
+  "campaign": {
+    "name": "Leads | Vertical video | Q1",
+    "objective": "OUTCOME_LEADS",
+    "buying_type": "AUCTION",
+    "special_ad_categories": "[]"
+  },
+
+  "ad_set": {
+    "name": "Leads | US | Instant form",
+    "daily_budget_usd": 20,
+    "billing_event": "IMPRESSIONS",
+    "optimization_goal": "LEAD_GENERATION",
+    "_destination_type": "ON_AD sends people to an instant form. Use LEAD_FORM only if Meta tells you to.",
+    "destination_type": "ON_AD",
+    "targeting": {
+      "countries": ["US"],
+      "age_min": 30,
+      "age_max": 45,
+      "_placements": "Manual, Reels and Stories only. Feed crops a 9:16 video and buries the caption.",
+      "publisher_platforms": ["facebook", "instagram"],
+      "facebook_positions": ["facebook_reels", "story"],
+      "instagram_positions": ["reels", "story"]
+    }
+  },
+
+  "creative": {
+    "creative_name": "Vertical video, multi-text v1",
+    "_video": "Path relative to this config folder. 1080x1920 works everywhere Reels and Stories run.",
+    "video": "creative/ad.mp4",
+    "thumbnail": "creative/thumbnail.jpg",
+    "cta_type": "SIGN_UP",
+    "_texts": "Several of each. Meta picks the combination per person rather than splitting your budget across near-identical ads, which matters at a small daily budget.",
+    "primary_texts": [
+      "First primary text goes here.",
+      "A second angle on the same offer.",
+      "A third, shorter one."
+    ],
+    "headlines": [
+      "Your headline",
+      "A second headline"
+    ]
+  },
+
+  "ad": {
+    "name": "Vertical video | Ad 1"
+  },
+
+  "lead_form": {
+    "name": "Lead form v1",
+    "_immutable": "Forms cannot be edited once published. Changing this and running `form` creates a NEW form and points the ad at it.",
+    "locale": "en_US",
+    "privacy_policy": {
+      "url": "https://example.com/privacy",
+      "link_text": "Privacy Policy"
+    },
+    "questions": "[{\"type\":\"FULL_NAME\"},{\"type\":\"EMAIL\"},{\"type\":\"PHONE\"}]",
+    "follow_up_action_url": "https://example.com/thanks",
+    "_consent": "Meta rejects a pre-checked consent box. It must default to unchecked."
+  },
+
+  "live": {
+    "_comment": "Filled in from what `publish --go` prints. `copy`, `form` and `pulse` read these.",
+    "campaign_id": "",
+    "ad_set_id": "",
+    "ad_id": "",
+    "video_id": "",
+    "thumbnail_hash": "",
+    "form_id": ""
+  },
+
+  "monitor": {
+    "_comment": "Thresholds for `pulse`. See context/ad-management-principles.md for where each number comes from and how much to trust it.",
+    "no_edit_window_until": "",
+    "benchmarks": {
+      "_source": "Replace with medians for YOUR vertical. The defaults below are US lead-objective figures and are a starting point, not a target.",
+      "cpl_band_usd": [25, 35],
+      "ctr_median_pct": 1.86,
+      "cpc_median_usd": 1.65
+    },
+    "thresholds": {
+      "_note": "The spend-with-no-lead numbers are house rules, not research. Set them to what you are willing to lose while you find out.",
+      "warn_spend_no_lead_usd": 105,
+      "alert_spend_no_lead_usd": 210,
+      "cpl_warn_usd": 70,
+      "min_leads_for_cpl_verdict": 3,
+      "budget_step_warn_pct": 20,
+      "token_warn_days": 14
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# The leak-scan term list. A list of former clients is identifying data in
+# its own right, so it stays local. See .denylist.example.
+.denylist
+
+# Secrets and per-machine settings. The config folder never belongs in git.
+.env
+.env.*
+!.env.example
+meta-ads/
+.meta-ads/
+
+# Monitor output: your own campaign numbers
+pulse-state.json
+pulse-history.jsonl
+
+# Creative
+*.mp4
+*.mov
+*.jpg
+*.jpeg
+*.png
+!docs/**/*.png
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.DS_Store

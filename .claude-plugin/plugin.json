@@ -1,0 +1,13 @@
+{
+  "name": "meta-ads",
+  "displayName": "Meta Ads Kit",
+  "version": "0.1.0",
+  "description": "Run a Meta lead-generation campaign from Claude Code: connect the ad account, publish a campaign, change live ad copy and lead forms, and check spend and cost per lead every morning. Writes are opt-in and everything is created paused, so nothing spends money without a person saying so.",
+  "author": {
+    "name": "Lilly Field",
+    "email": "hello@opterraventures.com"
+  },
+  "repository": "https://github.com/lilly-builds/ads-cooking",
+  "license": "MIT",
+  "keywords": ["meta", "facebook", "instagram", "ads", "marketing-api", "lead-generation", "advertising"]
+}

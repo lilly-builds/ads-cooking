@@ -1,0 +1,27 @@
+[project]
+name = "ads-cooking"
+version = "0.1.0"
+description = "Run a Meta lead-generation campaign from the command line or from Claude Code."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Lilly Field", email = "hello@opterraventures.com"}]
+keywords = ["meta", "facebook", "instagram", "advertising", "marketing-api", "lead-generation"]
+
+# No dependencies, deliberately. Everything uses the standard library, which
+# means no virtualenv, no lockfile, and no supply chain for a tool that holds a
+# key to someone's ad spend.
+dependencies = []
+
+[project.scripts]
+metaads = "metaads.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/lilly-builds/ads-cooking"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["metaads"]

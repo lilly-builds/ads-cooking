@@ -1,0 +1,6 @@
+# Terms that must never appear in this repo, one regex per line.
+# Copy to .denylist (gitignored) and add anything identifying from the account
+# this was extracted from: client names, business names, portfolio names, domains.
+# The list itself must not be committed, or it becomes the leak it exists to prevent.
+example-client-name
+example-business-name
