@@ -167,6 +167,30 @@ def missing_values(directory: Path) -> list[str]:
             if not values.get(key) or values[key].startswith("<")]
 
 
+# Every URL below is one of these. The rule exists because the first version of
+# this list deep-linked to four Business Settings sections written from memory,
+# and a link that 404s is worse than the "go and find it" instruction it
+# replaced: it costs the same time and it also makes the tool look wrong.
+#
+# So a deep link goes in here only once someone has opened it. Meta renames
+# these sections, and it moves them between Business Manager and Business Suite.
+# Anything not checked gets the Business Settings root, which lands in the right
+# portfolio, plus the sidebar clicks in words.
+VERIFIED_PATHS = (
+    # developers.facebook.com/docs/marketing-api/system-users/create-retrieve-update
+    "https://business.facebook.com/settings/system-users",
+    # No path at all: the SPA root, which cannot be renamed out from under us.
+    "https://business.facebook.com/settings",
+    # Both were in this repo before, written from a real end-to-end setup.
+    "https://developers.facebook.com/apps/",
+    "https://www.facebook.com/legal/leadgen/tos/",
+    # Landing pages, not deep links.
+    "https://developers.facebook.com/",
+    "https://www.facebook.com/business/help/",
+    "https://adsmanager.facebook.com",
+)
+
+
 def setup_links(business_id: str | None = None,
                 page_id: str | None = None,
                 app_id: str | None = None) -> list[tuple[str, str, str]]:
@@ -182,14 +206,16 @@ def setup_links(business_id: str | None = None,
     business = business_id or "<BUSINESS_ID>"
     page = page_id or "<PAGE_ID>"
     app = app_id or "<APP_ID>"
-    settings = f"https://business.facebook.com/settings"
+    settings = "https://business.facebook.com/settings"
+    scoped = f"{settings}?business_id={business}" if business_id else settings
     scopes = ", ".join(SCOPES)
 
     return [
         (
             "Find your Business Portfolio id",
-            f"{settings}/info",
-            "The number on this page. Every link below is scoped to it, so it comes first.",
+            settings,
+            "Business info in the left sidebar. The number under your portfolio name. "
+            "Every link below is scoped to it, so it comes first.",
         ),
         (
             "Accept the developer terms",
@@ -209,14 +235,17 @@ def setup_links(business_id: str | None = None,
         ),
         (
             "Give the system user the ad account",
-            f"{settings}/ad-accounts?business_id={business}",
-            "Assign it, with Manage campaigns.",
+            scoped,
+            "Left sidebar, Accounts, Ad accounts. Pick the account, Assign people, your "
+            "system user, Manage campaigns. Your ad account id is on this screen too, and "
+            "it is the number in the panel, not the one in the address bar.",
         ),
         (
             "Give the system user the Page",
-            f"{settings}/pages?business_id={business}",
-            "Assign it, with MANAGE or ADVERTISE. Skipping this is the most common mistake "
-            "here: everything works until lead forms, which live on the Page, not the account.",
+            scoped,
+            "Left sidebar, Accounts, Pages. Pick the Page, Assign people, your system user, "
+            "MANAGE or ADVERTISE. Skipping this is the most common mistake here: everything "
+            "works until lead forms, which live on the Page, not the account.",
         ),
         (
             "Generate the token",

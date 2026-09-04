@@ -113,7 +113,7 @@ Clone it and run the tests. No account needed, no internet needed.
 ```bash
 git clone https://github.com/lilly-builds/ads-cooking
 cd ads-cooking
-python3 -m unittest discover -s tests -t .      # 130 tests
+python3 -m unittest discover -s tests -t .      # 133 tests
 ./scripts/check.sh                              # the full gate
 ```
 
@@ -157,7 +157,7 @@ And the rest:
 | Folder | What's in it |
 |---|---|
 | `context/` | Setup guide, Meta's gotchas, the research behind the numbers |
-| `tests/` | 130 tests across 7 files, plus the pretend Meta they run against |
+| `tests/` | 133 tests across 7 files, plus the pretend Meta they run against |
 | `scripts/` | `check.sh` runs everything before you push. `check_docs.py` catches docs that drift from the code. |
 | `.claude-plugin/` | The two files that make this installable |
 

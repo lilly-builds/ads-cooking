@@ -21,8 +21,9 @@ from adscooking.__main__ import SETUP_PROBLEM, main
 from adscooking.check import CAMPAIGN_PROBLEM, OK, run_check
 from adscooking.check import SETUP_PROBLEM as CHECK_SETUP_PROBLEM
 from adscooking.graph import GraphError
-from adscooking.setup import (MIN_PYTHON, SCOPES, git_ignores, missing_values,
-                              python_ready, render_links, scaffold, setup_links)
+from adscooking.setup import (MIN_PYTHON, SCOPES, VERIFIED_PATHS, git_ignores,
+                              missing_values, python_ready, render_links, scaffold,
+                              setup_links)
 from tests.fake_graph import FakeGraph
 
 REPO = Path(__file__).resolve().parent.parent
@@ -150,6 +151,35 @@ class TestSetupLinks(unittest.TestCase):
     def test_the_page_task_step_is_present_and_explains_why(self):
         rendered = render_links(setup_links())
         self.assertIn("MANAGE or ADVERTISE", rendered)
+
+    def test_every_link_is_one_somebody_has_actually_opened(self):
+        """The guard on the mistake that produced this list's first version.
+
+        Four Business Settings sections were deep-linked from memory. A link
+        that 404s costs the user the same time as no link and also makes the
+        tool look wrong, so a deep link earns its place only once it has been
+        checked. Adding one means opening it and adding it to VERIFIED_PATHS.
+        """
+        for what, url, _ in setup_links("999999999999999", "888888888888888",
+                                        "123456789012345"):
+            self.assertTrue(
+                any(url.startswith(prefix) for prefix in VERIFIED_PATHS),
+                f"'{what}' links to {url}, which is not in VERIFIED_PATHS. "
+                f"Open it first, then add its prefix there.")
+
+    def test_unchecked_business_settings_sections_are_not_deep_linked(self):
+        """Named explicitly, because these three are the ones that were wrong."""
+        rendered = render_links(setup_links("999999999999999"))
+        for guess in ("/settings/info", "/settings/ad-accounts", "/settings/ad_accounts",
+                      "/settings/pages"):
+            self.assertNotIn(guess, rendered)
+
+    def test_the_unlinkable_steps_say_where_to_click_instead(self):
+        """Dropping the deep link must not drop the directions with it."""
+        rendered = render_links(setup_links("999999999999999"))
+        self.assertIn("Accounts, Ad accounts", rendered)
+        self.assertIn("Accounts, Pages", rendered)
+        self.assertIn("Business info in the left sidebar", rendered)
 
     def test_the_lead_terms_link_carries_the_page_id(self):
         rendered = render_links(setup_links(page_id="888888888888888"))

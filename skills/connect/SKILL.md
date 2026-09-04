@@ -39,9 +39,14 @@ every later link is scoped to it. Once you have it:
 PYTHONPATH="${CLAUDE_PLUGIN_ROOT}" python3 -m adscooking connect --business-id <ID>
 ```
 
-Now steps 4 to 7 are links that land on the right screen instead of instructions to go hunting
-in Business Settings, which is where the time goes. Add `--page-id` and `--app-id` as those
-appear, and re-run again. Re-running never overwrites anything.
+Now each step lands in the right portfolio instead of sending them hunting, which is where the
+time goes. Add `--page-id` and `--app-id` as those appear, and re-run again. Re-running never
+overwrites anything.
+
+Two of the steps give the Business Settings root and then the sidebar clicks, rather than a
+direct link. That is deliberate: Meta renames those sections and moves them between Business
+Manager and Business Suite, and a link that 404s wastes the same time as no link. Read the
+sidebar path out loud rather than inventing a URL.
 
 ## What only they can do
 
